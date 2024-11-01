@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 
 exports.register = async (req, res) => {
-  const { imie, nazwisko, email, haslo } = req.body;
+  const { imie, nazwisko, email, haslo, typ_uzytkownika = 'student' } = req.body;
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@(pollub\.edu\.pl|pollub\.pl)$/;
   if (!emailRegex.test(email)) {
@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(haslo, 10);
-  await User.create(imie, nazwisko, email, hashedPassword);
+  await User.create(imie, nazwisko, email, hashedPassword, typ_uzytkownika);
   res.status(201).json({ message: 'Rejestracja przebiegła pomyślnie.' });
 };
 
@@ -32,6 +32,6 @@ exports.login = async (req, res) => {
     return res.status(400).json({ message: 'Nieprawidłowy email lub hasło.' });
   }
 
-  res.status(200).json({ message: 'Logowanie przebiegło pomyślnie.', imie: user[0].imie });
+  res.status(200).json({ message: 'Logowanie przebiegło pomyślnie.', imie: user[0].imie, typ_uzytkownika: user[0].typ_uzytkownika });
 };
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import '../styles/Auth.css';
+import { Link } from 'react-router-dom';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -49,13 +51,20 @@ function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="imie" placeholder="Imię" value={formData.imie} onChange={handleChange} />
-      <input name="nazwisko" placeholder="Nazwisko" value={formData.nazwisko} onChange={handleChange} />
-      <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-      <input name="haslo" type="password" placeholder="Hasło" value={formData.haslo} onChange={handleChange} />
-      <button type="submit">Zarejestruj się</button>
-    </form>
+    <div className="form-container">
+      <form onSubmit={handleSubmit}>
+        <h2 className="form-title">Rejestracja</h2>
+        <input name="imie" placeholder="Imię" value={formData.imie} onChange={handleChange} />
+        <input name="nazwisko" placeholder="Nazwisko" value={formData.nazwisko} onChange={handleChange} />
+        <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+        <input name="haslo" type="password" placeholder="Hasło" value={formData.haslo} onChange={handleChange} />
+        
+        <div className="form-footer">
+          <Link to="/login" className="link">Już masz konto?</Link>
+          <button type="submit">Zarejestruj się</button>
+        </div>
+      </form>
+    </div>
   );
 }
 
