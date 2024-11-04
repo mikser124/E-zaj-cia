@@ -43,7 +43,7 @@ function Register() {
     console.log('Response from server:', data);
     if (response.ok) {
       alert('Rejestracja udana!');
-      login();
+      login({ id: data.id, imie: data.imie, typ_uzytkownika: data.typ_uzytkownika }, data.token);
       navigate('/login');
     } else {
       alert('Błąd: ' + data.message);

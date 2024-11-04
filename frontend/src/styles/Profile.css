@@ -1,0 +1,117 @@
+.profile-banner {
+    width: 90%; /* Ograniczenie szerokości do 80% */
+  
+    margin: 2% auto; /* Wyśrodkowanie kontenera */
+    border: 2px solid #000000; /* Obramowanie */
+    border-radius: 10px; /* Zaokrąglenie rogów, opcjonalne */
+    overflow: hidden; /* Ukrycie nadmiaru (np. zaokrąglonych rogów) */
+    position: relative; /* Umożliwia użycie absolutnych pozycji dla wewnętrznych elementów */
+    padding: 20px; /* Opcjonalne wypełnienie wewnętrzne */
+}
+
+
+
+ 
+  .profile-info {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    background-color: transparent;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 2%;
+    object-fit: cover;
+    border: 3px solid #eee;
+    background-image: url('../assets/images/defaultAvatar.png'); /* Ścieżka domyślnego awatara */
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .profile-name {
+    font-size: 24px;
+    font-weight: 600;
+    color: black;
+    margin-left: 2%;
+    -webkit-text-stroke: 1px white;
+  }
+  
+  .profile-comment {
+    display: flex; /* Użycie flexboxa dla lepszej organizacji */
+    align-items: center; /* Wyśrodkowanie elementów w pionie */
+    margin-top: 10%;
+}
+
+
+  .comment-textarea {
+    flex: 1; /* Spraw, aby pole tekstowe zajmowało dostępne miejsce */
+    margin-left: 10px; /* Odstęp między polem tekstowym a zdjęciem */
+    border: 2px solid black; /* Czarne obramowanie */
+    border-radius: 5px; /* Zaokrąglenie rogów */
+    padding: 10px; /* Padding wewnętrzny */
+    font-size: 16px; /* Ustawienie rozmiaru czcionki */
+    outline: none; /* Usunięcie obramowania przy fokusu */
+    resize: none; /* Zablokowanie zmiany rozmiaru */
+    width: 100%; /* Ustaw szerokość na 80% */
+    max-width: 600px; /* Maksymalna szerokość, jeśli chcesz ograniczyć */
+}
+
+
+.comment-textarea:focus {
+    border-color: #007BFF; /* Zmiana koloru obramowania przy fokusu */
+}
+ 
+
+.small-avatar {
+    margin-left: 5%;
+    width: 50px; /* Ustaw małą szerokość dla zdjęcia profilowego */
+    height: 50px; /* Ustaw małą wysokość dla zdjęcia profilowego */
+    object-fit: cover;
+    border-radius: 50%; /* Zaokrąglij zdjęcie profilowe */
+    border: 1px solid black;
+}
+.avatar-container {
+    position: relative; /* Umożliwia precyzyjne pozycjonowanie ikony */
+    display: inline-block; /* Umożliwia kontenerowi przyjęcie rozmiarów zdjęcia */
+}
+
+.profile-avatar {
+    width: 100px; /* Ustal odpowiednią szerokość zdjęcia */
+    height: 100px; /* Ustal odpowiednią wysokość zdjęcia */
+    border-radius: 50%; /* Zaokrąglone zdjęcie */
+    object-fit: cover; /* Zachowanie proporcji zdjęcia */
+}
+
+.camera-icon {
+    position: absolute; /* Umożliwia pozycjonowanie ikony na zdjęciu */
+    top: 50%; /* Wyśrodkowanie ikony w pionie */
+    left: 50%; /* Wyśrodkowanie ikony w poziomie */
+    transform: translate(-50%, -50%); /* Umożliwia dokładne wyśrodkowanie */
+    display: none; /* Ukryj ikonę domyślnie */
+}
+
+.avatar-container:hover .camera-icon {
+    display: block; /* Pokaż ikonę na hover */
+    color: white; /* Kolor ikony */
+    cursor: pointer; /* Zmieniaj kursor przy najechaniu */
+}
+
+.change-banner-button {
+    position: absolute; /* Pozycjonowanie absolutne w obrębie banera */
+    top: 10px; /* Odstęp od góry */
+    right: 10px; /* Odstęp od prawej krawędzi */
+    background-color: transparent; /* Tło przycisku */
+    border: 1px solid black; /* Czarne obramowanie */
+    padding: 5px 10px; /* Padding przycisku */
+    cursor: pointer; /* Kursor jako wskaźnik */
+    border-radius: 5px; /* Zaokrąglone rogi */
+    -webkit-text-stroke: 0.4px white;
+}
+
+.change-banner-button:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Zmiana koloru tła przy najechaniu */
+}

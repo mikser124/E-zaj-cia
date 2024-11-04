@@ -6,7 +6,7 @@ import '../styles/Home.css'
 
 function Home() {
   const { isAuthenticated, user } = useAuth();
-
+  console.log(user);
   return (
     <div className="home-container">
       <h1>Witamy na stronie głównej</h1>
