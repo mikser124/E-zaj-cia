@@ -7,7 +7,7 @@ import Login from './components/Login';
 import Home from './pages/Home';
 import { AuthProvider } from './AuthContext';
 import Navbar from './components/Navbar';
-import Profile from './components/Profile/Profile.js';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/profile/:id" element={<ProfilePage />} />
           </Routes>
       </Router>
     </AuthProvider>
