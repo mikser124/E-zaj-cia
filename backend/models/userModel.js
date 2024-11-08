@@ -16,7 +16,7 @@ const User = {
     return db.query('SELECT * FROM uzytkownik WHERE id = ?', [id]);
   },
 
-  updateProfile: async (id, updates) => { 
+  updateUser: async (id, updates) => { 
     const fields = [];
     const values = [];
   

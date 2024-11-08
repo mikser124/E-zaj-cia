@@ -1,0 +1,156 @@
+/* Styl kontenera całego komponentu */
+.record-container {
+    display: flex; /* Ustawiamy elastyczny układ */
+    justify-content: space-between; /* Rozdzielamy zawartość na dwie części */
+    align-items: flex-start; /* Wyrównanie do góry */
+    width: 90%;
+    max-width: 90%; /* Ustawiamy szerokość na 100% */
+    margin: 40px auto; /* Wyśrodkowanie na stronie */
+    padding: 30px; /* Zwiększamy padding */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Zwiększamy cień */
+  }
+  
+  /* Wideo */
+  .video-container {
+    width: 60%; /* Wideo zajmuje 60% szerokości */
+    margin-right: 30px; /* Większy odstęp między wideo a szczegółami */
+  }
+  
+  video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Cień wokół wideo */
+  }
+  
+  /* Sekcja szczegółów nagrania po prawej stronie */
+  .record-details {
+    width: 35%; /* Szczegóły zajmują 35% szerokości */
+    padding: 30px; /* Zwiększamy padding */
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .record-details p {
+    font-size: 1.2rem; /* Zwiększamy czcionkę */
+    margin-bottom: 16px; /* Większe odstępy */
+    color: #555;
+    line-height: 1.6; /* Większa odstępność między wierszami */
+  }
+  
+  .record-details strong {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Sekcja autora */
+  .author-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .author-info {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    padding: 12px 20px; /* Zwiększamy padding */
+    font-size: 1.2rem; /* Większa czcionka */
+  }
+  
+  .author-info img {
+    width: 50px; /* Większy obrazek */
+    height: 50px; /* Większy obrazek */
+    border-radius: 50%;
+    margin-right: 15px; /* Większy odstęp */
+  }
+  
+  .author-info span {
+    color: #333;
+    font-weight: 500;
+  }
+  
+  /* Liczba polubień i data nagrania */
+  .likes-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+  }
+  
+  .likes-container span {
+    font-size: 1.3rem; /* Zwiększamy czcionkę */
+    color: #555;
+  }
+  
+  .likes-container .like-button {
+    padding: 12px 25px; /* Większy przycisk */
+    background-color: #ff3b30;
+    color: #fff;
+    font-size: 1.1rem; /* Zwiększamy czcionkę */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .likes-container .like-button:hover {
+    background-color: #d6322b;
+  }
+  
+  /* Responsywność */
+  @media (max-width: 1024px) {
+    .record-container {
+      flex-direction: column; /* Zmiana na układ pionowy na średnich ekranach */
+      align-items: center;
+      padding: 20px;
+    }
+  
+    .video-container {
+      width: 100%; /* Wideo zajmuje całą szerokość na średnich ekranach */
+      margin-bottom: 30px;
+    }
+  
+    .record-details {
+      width: 100%; /* Szczegóły zajmują całą szerokość */
+    }
+  
+    .likes-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .likes-container span {
+      margin-bottom: 12px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .record-container {
+      padding: 15px;
+    }
+  
+    .video-container {
+      width: 100%; /* Wideo zajmuje całą szerokość na małych ekranach */
+      margin-bottom: 20px;
+    }
+  
+    .record-details {
+      width: 100%; /* Szczegóły zajmują całą szerokość */
+    }
+  
+    .likes-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .likes-container span {
+      margin-bottom: 10px;
+    }
+  }
+  

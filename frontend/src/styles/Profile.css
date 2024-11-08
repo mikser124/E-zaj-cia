@@ -122,6 +122,12 @@
   border-radius: 2px; 
 }
 
+.record-list {
+  margin: 5%
+  
+
+}
+
 .record-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

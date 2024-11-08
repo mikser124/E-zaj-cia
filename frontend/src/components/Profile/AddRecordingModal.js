@@ -27,7 +27,7 @@ const AddRecordingModal = ({ isOpen, onRequestClose, userId }) => {
             await uploadBytes(fileRef, file);
             const url = await getDownloadURL(fileRef); 
 
-            const response = await fetch(`http://localhost:3000/profile/${userId}/records`, {
+            const response = await fetch(`http://localhost:3000/user/${userId}/records`, { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

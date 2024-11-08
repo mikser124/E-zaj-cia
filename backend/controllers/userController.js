@@ -2,27 +2,30 @@ const User = require('../models/userModel');
 const Record = require('../models/recordModel');
 const path = require('path');
 const fs = require('fs');
-const bucket = require('../config/firebase'); 
+const bucket = require('../config/firebase');
 
-exports.getProfile = async (req, res) => {
+// Pobieranie użytkownika (profilu)
+exports.getUserProfile = async (req, res) => {
   const userId = req.params.id;
 
   try {
-    const [user] = await User.findById(userId, {attributes: {exlude: ['haslo']}});
+    const [user] = await User.findById(userId, {attributes: {exlude: ['haslo']}}); // Zmieniamy metodę na getUser
     if (!user || user.length === 0) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'Użytkownik nie znaleziony.' });
     }
 
     const { imie, nazwisko, email, photo, banner, opis, typ_uzytkownika } = user[0];
-    const recordings = await Record.findByUserId(userId); 
-    res.status(200).json({ imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, recordings }); 
+    const nagrania = await Record.findByUserId(userId); 
+
+    res.status(200).json({ imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania }); 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching profile.' });
+    res.status(500).json({ message: 'Błąd przy pobieraniu użytkownika.' });
   }
 };
 
-exports.updateProfile = async (req, res) => {
+// Aktualizacja danych użytkownika (np. opis)
+exports.updateUserProfile = async (req, res) => {
   const userId = req.user.id;
   const profileId = req.params.id;
 
@@ -34,11 +37,11 @@ exports.updateProfile = async (req, res) => {
   const updates = { opis };
 
   try {
-    await User.updateProfile(userId, updates);
-    res.status(200).json({ message: 'Profil został pomyślnie zaktualizowany.' });
+    await User.updateUserProfile(userId, updates);
+    res.status(200).json({ message: 'Profil użytkownika został pomyślnie zaktualizowany.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Wystąpił błąd podczas aktualizacji profilu.' });
+    res.status(500).json({ message: 'Wystąpił błąd podczas aktualizacji profilu użytkownika.' });
   }
 };
 
@@ -50,6 +53,7 @@ const deleteOldFile = (filePath) => {
   }
 };
 
+// Zaktualizowanie zdjęcia profilowego użytkownika
 exports.updatePhoto = async (req, res) => {
   const userId = req.user.id;
 
@@ -68,14 +72,15 @@ exports.updatePhoto = async (req, res) => {
 
       const updates = { photo: photoPath };
       await User.updateProfile(userId, updates);
-      res.status(200).json({ message: 'Zdjęcie profilowe zaktualizowane.', photo: photoPath });
+      res.status(200).json({ message: 'Zdjęcie profilowe użytkownika zaktualizowane.', photo: photoPath });
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Wystąpił błąd podczas aktualizacji zdjęcia profilowego.' });
+    res.status(500).json({ message: 'Wystąpił błąd podczas aktualizacji zdjęcia profilowego użytkownika.' });
   }
 };
 
+// Zaktualizowanie banera użytkownika
 exports.updateBanner = async (req, res) => {
   const userId = req.user.id;
 
@@ -93,29 +98,28 @@ exports.updateBanner = async (req, res) => {
 
       const updates = { banner: bannerPath };
       await User.updateProfile(userId, updates);
-      res.status(200).json({ message: 'Baner zaktualizowany.', banner: bannerPath });
+      res.status(200).json({ message: 'Baner użytkownika zaktualizowany.', banner: bannerPath });
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Wystąpił błąd podczas aktualizacji banera.' });
+    res.status(500).json({ message: 'Wystąpił błąd podczas aktualizacji banera użytkownika.' });
   }
 };
 
-
+// Pobieranie nagrań użytkownika
 exports.getRecordsByUserId = async (req, res) => {
-  const userId = req.params.id; 
+  const userId = req.params.id;
 
   try {
     const records = await Record.findByUserId(userId); 
     res.status(200).json(records);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Wystąpił błąd podczas pobierania nagrań.' });
+    res.status(500).json({ message: 'Błąd przy pobieraniu nagrań użytkownika.' });
   }
 };
 
-
-
+// Dodawanie nagrania przez użytkownika
 exports.addRecord = async (req, res) => {
   console.log('Received data:', req.body);
   const userId = req.user.id; // Zakładając, że masz odpowiednie middleware do uwierzytelniania
@@ -132,9 +136,9 @@ exports.addRecord = async (req, res) => {
           uzytkownik_id: userId,
       });
 
-      res.status(201).json({ message: 'Nagranie zostało dodane.', url });
+      res.status(201).json({ message: 'Nagranie zostało dodane do profilu użytkownika.', url });
   } catch (error) {
       console.error('Błąd podczas zapisu nagrania w bazie danych:', error);
-      res.status(500).json({ message: 'Wystąpił błąd podczas zapisywania nagrania.' });
+      res.status(500).json({ message: 'Błąd podczas zapisywania nagrania.' });
   }
 };

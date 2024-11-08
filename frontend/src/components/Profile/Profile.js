@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/Profile.css';
@@ -8,72 +8,81 @@ import { useAuth } from '../../AuthContext';
 import Button from './Button';
 import AddRecordingModal from './AddRecordingModal';
 
-const Profile = () => {
+const UserProfile = () => {
   const { id } = useParams();
-  const { user } = useAuth();
-  const [profileData, setProfileData] = useState(null);
+  const { user, token } = useAuth(); 
+  const [userData, setUserData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const response = await fetch(`http://localhost:3000/profile/${id}`, {
+    if (!token) return;
+
+    const fetchUser = async () => {
+      const response = await fetch(`http://localhost:3000/user/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`, 
         },
       });
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
-        setProfileData(data);
+        setUserData(data);
       } else {
         console.error(data.message);
       }
     };
 
-    fetchProfile();
-  }, [id, user]);
+    fetchUser();
+  }, [id, token]); 
 
-  const fetchUpdatedProfile = async () => {
-    const response = await fetch(`http://localhost:3000/profile/${id}`, {
+  const fetchUpdatedUser = async () => {
+    if (!token) return; 
+
+    const response = await fetch(`http://localhost:3000/user/${id}`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`, 
       },
     });
     const data = await response.json();
-    if (response.ok) setProfileData(data);
+    if (response.ok) setUserData(data);
     else console.error(data.message);
   };
 
   const handlePhotoUpload = async (e) => {
+    if (!token) return; 
+
     const formData = new FormData();
     formData.append('photo', e.target.files[0]);
-    const response = await fetch(`http://localhost:3000/profile/${id}/photo`, {
+    const response = await fetch(`http://localhost:3000/user/${id}/photo`, {
       method: 'PUT',
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { Authorization: `Bearer ${token}` }, 
       body: formData,
     });
     if (response.ok) {
-      await fetchUpdatedProfile(); 
+      await fetchUpdatedUser();
     }
   };
 
   const handleBannerUpload = async (e) => {
+    if (!token) return; 
+
     const formData = new FormData();
     formData.append('banner', e.target.files[0]);
-    const response = await fetch(`http://localhost:3000/profile/${id}/banner`, {
+    const response = await fetch(`http://localhost:3000/user/${id}/banner`, {
       method: 'PUT',
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: { Authorization: `Bearer ${token}` }, 
       body: formData,
     });
     if (response.ok) {
-      await fetchUpdatedProfile(); 
+      await fetchUpdatedUser();
     }
   };
 
-  if (!profileData) return <div>Ładowanie...</div>;
+  if (!userData) return <div>Ładowanie...</div>;
 
-  const { imie, nazwisko, photo, banner, opis, nagrania, typ_uzytkownika } = profileData;
-  const bannerUrl = banner ? `http://localhost:3000/${banner}` : ''; 
-  const avatarUrl = photo ? `http://localhost:3000/${photo}` : defaultAvatar; 
+  const { imie, nazwisko, photo, banner, opis, nagrania, typ_uzytkownika } = userData;
+  const bannerUrl = banner ? `http://localhost:3000/${banner}` : '';
+  const avatarUrl = photo ? `http://localhost:3000/${photo}` : defaultAvatar;
 
   const isOwnProfile = user && user.id === parseInt(id);
   const isStudent = typ_uzytkownika === 'student';
@@ -118,28 +127,28 @@ const Profile = () => {
         <textarea
           className="comment-textarea"
           value={opis || ""}
-          onChange={(e) => setProfileData((prev) => ({ ...prev, opis: e.target.value }))}
+          onChange={(e) => setUserData((prev) => ({ ...prev, opis: e.target.value }))}
           placeholder="Napisz coś o sobie..."
         />
       </div>
 
-      {/* Sekcja nagrań */}
       {!isStudent && (
         <div className="record-list">
           {nagrania && nagrania.length > 0 ? (
             <div className="record-grid">
               {nagrania.map((record) => (
                 <div className="record-item" key={record.id}>
-                  <h4>{record.tytul}</h4>
-                  <video controls>
-                    <source src={record.url} type="video/mp4" />
-                    Wystapił błąd w wyświetleniu filmiku
-                  </video>
+                  <Link to={`/record/${record.id}`} key={record.id} className="record-item">
+                    <h4>{record.tytul}</h4>
+                    <video controls>
+                      <source src={record.url} type="video/mp4" />
+                    </video>
+                  </Link>
                 </div>
               ))}
             </div>
           ) : (
-            null 
+            null
           )}
           {isOwnProfile && (
             <Button
@@ -159,4 +168,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;
