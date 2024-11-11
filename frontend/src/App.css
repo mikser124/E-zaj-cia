@@ -1,38 +1,29 @@
-.App {
-  text-align: center;
+body {
+  font-family: 'Roboto', sans-serif; /* Ustawiamy Roboto jako domyślną czcionkę */
+  line-height: 1.6; /* Odstęp między liniami */
+  color: #333; /* Kolor tekstu */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 600;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Przycisk */
+button {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400; /* Standardowa grubość czcionki */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+textarea {
+  font-family: 'Roboto', sans-serif; /* Używamy Roboto dla wszystkich textarea */
+  font-size: 16px; /* Dostosowanie rozmiaru czcionki */
+  line-height: 1.5; /* Dostosowanie wysokości linii, aby było czytelniejsze */
+  color: #333; /* Kolor tekstu */
+  background-color: #fff; /* Kolor tła, aby pole było białe */
+  border: 1px solid #ccc; /* Border wokół textarea */
+  border-radius: 5px; /* Zaokrąglenie rogów */
+  padding: 10px; /* Dodatkowe odstępy wewnątrz pola */
+  box-sizing: border-box; /* Zapewnia, że padding nie wpływa na rozmiar elementu */
+  resize: vertical; /* Pozwala na zmianę wysokości textarea, ale nie szerokości */
 }

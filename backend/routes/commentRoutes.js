@@ -7,8 +7,8 @@ router.post('/:nagranie_id', authMiddleware, commentController.addComment);
 
 router.get('/:nagranie_id', commentController.getComments);
 
-router.put('/:comment_id', authMiddleware, commentController.updateComment);
+router.put('/:nagranie_id/:comment_id', authMiddleware, commentController.updateComment);
 
-router.delete('/:comment_id', authMiddleware, commentController.deleteComment);
+router.delete('/:nagranie_id/:comment_id', authMiddleware, commentController.deleteComment);
 
 module.exports = router;

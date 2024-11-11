@@ -7,7 +7,7 @@ router.get('/:id', userController.getUserProfile);
 
 router.put('/:id', authMiddleware, userController.updateUserProfile);
 
-router.post('/:id/update-photo', authMiddleware, userController.updatePhoto); // Bez Multera
+router.post('/:id/update-photo', authMiddleware, userController.updatePhoto); 
 router.post('/:id/update-banner', authMiddleware, userController.updateBanner);
 
 router.post('/:id/records', authMiddleware, userController.addRecord); 

@@ -52,11 +52,11 @@ const UserProfile = () => {
     if (!token) return;
   
     const formData = new FormData();
-    formData.append('photo', e.target.files[0]);  
+    formData.append('photo', e.target.files[0]);
   
     const response = await fetch(`http://localhost:3000/user/${id}/update-photo`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }, 
       body: formData,
     });
   
@@ -68,18 +68,16 @@ const UserProfile = () => {
     }
   };
   
-
   const handleBannerUpload = async (e) => {
     if (!token) return;
   
     const formData = new FormData();
     formData.append('banner', e.target.files[0]);
   
-    console.log('FormData przed wysłaniem:', formData);  // Sprawdź, czy plik jest dodany do FormData
   
     const response = await fetch(`http://localhost:3000/user/${id}/update-banner`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },  
       body: formData,
     });
   

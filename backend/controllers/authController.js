@@ -5,23 +5,19 @@ const jwt = require('jsonwebtoken');
 exports.register = async (req, res) => {
   const { imie, nazwisko, email, haslo, typ_uzytkownika = 'student' } = req.body;
 
-  // Walidacja e-maila
   const emailRegex = /^[a-zA-Z0-9._%+-]+@(pollub\.edu\.pl|pollub\.pl)$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: 'Adres e-mail musi mieć domenę pollub.edu.pl lub pollub.pl' });
   }
   console.log(Object.keys(User));
   try {
-    // Sprawdzenie, czy użytkownik o podanym e-mailu już istnieje
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: 'Użytkownik o podanym emailu już istnieje.' });
     }
 
-    // Haszowanie hasła
     const hashedPassword = await bcrypt.hash(haslo, 10);
 
-    // Tworzenie nowego użytkownika
     await User.create({
       imie,
       nazwisko,
@@ -41,23 +37,20 @@ exports.login = async (req, res) => {
   const { email, haslo } = req.body;
 
   try {
-    // Sprawdzenie, czy użytkownik istnieje w bazie
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(400).json({ message: 'Nieprawidłowy email lub hasło.' });
     }
 
-    // Porównanie hasła
     const validPassword = await bcrypt.compare(haslo, user.haslo);
     if (!validPassword) {
       return res.status(400).json({ message: 'Nieprawidłowy email lub hasło.' });
     }
 
-    // Generowanie tokenu JWT
     const token = jwt.sign(
       { id: user.id, imie: user.imie, typ_uzytkownika: user.typ_uzytkownika },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '5h' }
     );
 
     res.status(200).json({

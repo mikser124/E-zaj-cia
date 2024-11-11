@@ -1,70 +1,211 @@
-.comment-list {
-    width: 100%;
-    margin-top: 20px;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Komentarze */
+.record-page-comment-list {
+  width: 95%; /* Pełna szerokość dostępnego miejsca w wrapperze */
+  font-family: 'Roboto', sans-serif; 
+  margin-top: 20px;
+  background-color: #ffffff; /* Tło dla listy komentarzy */
+  padding: 20px; /* Padding wokół całej listy komentarzy */
+  border-radius: 8px; /* Zaokrąglone rogi */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Cień */
+}
+
+.record-page-comment-list-input-container {
+  display: flex;
+  flex-direction: column;
   
-  .comment-list-input-container {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
+}
+
+.record-page-comment-list-input {
+  width: 100%;
+  padding: 15px; /* Większe odstępy wewnętrzne */
+  font-family: 'Roboto', sans-serif; 
+  font-size: 16px; /* Większa czcionka */
+  line-height: 1.5; /* Większa przestrzeń między liniami */
+  margin-bottom: 10px;
+  border-radius: 8px; /* Zaokrąglone rogi */
+  border: 1px solid #ccc; /* Subtelna ramka */
+  background-color: #f7f7f7; /* Tło o bardzo jasnym szarym kolorze */
+  color: #333; /* Kolor tekstu */
+  box-sizing: border-box; /* Upewnij się, że padding nie wpływa na rozmiar elementu */
+  transition: all 0.3s ease; /* Płynne przejście efektów */
+  resize: vertical; /* Pozwala na zmianę wysokości */
+}
+
+.record-page-comment-list-input:focus {
+  outline: none; /* Usuwamy domyślną obramowanie */
+  border-color: #007BFF; /* Zmiana koloru obramowania na niebieski */
+  background-color: #ffffff; /* Białe tło po focusie */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Subtelny cień */
+}
+
+.record-page-comment-list-input::placeholder {
+  font-family: 'Roboto', sans-serif; 
+  color: #aaa; /* Jasnoszary kolor placeholdera */
+  font-style: italic; /* Pochylony tekst */
+}
+
+.record-page-comment-list-input-container {
+  margin-bottom: 20px; /* Przestrzeń między polem komentarza a przyciskiem */
+}
+
+
+
+/* Komentarze */
+.record-page-comment-item {
+  background-color: #ffffff;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.record-page-comment-item:hover {
+  background-color: #f1f1f1;
+}
+
+.record-page-comment-text {
+  font-family: 'Roboto', sans-serif; 
+
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Gdy nie ma komentarzy */
+.record-page-comment-list-empty {
+  font-family: 'Roboto', sans-serif; 
+
+  text-align: center;
+  font-size: 18px;
+  color: #888;
+  margin-top: 30px;
+}
+
+/* Loading i Error */
+.record-page-comment-list-loading,
+.record-page-comment-list-error {
+  font-family: 'Roboto', sans-serif; 
+
+  text-align: center;
+  font-size: 18px;
+  color: #888;
+  margin-top: 30px;
+}
+
+/* Nagłówek komentarza (użytkownik, avatar) */
+.record-page-comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.record-page-comment-author-info {
+  display: flex;
+  align-items: center;
+}
+
+.record-page-comment-author-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.record-page-comment-author-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.record-page-comment-edit-input {
+  width: 100%;
+  padding: 15px; /* Większe odstępy wewnętrzne */
+  font-size: 16px; /* Większa czcionka */
+  line-height: 1.5; /* Większa przestrzeń między liniami */
+  border-radius: 8px; /* Zaokrąglone rogi */
+  border: 1px solid #ccc; /* Subtelna ramka */
+  background-color: #f7f7f7; /* Tło o bardzo jasnym szarym kolorze */
+  color: #333; /* Kolor tekstu */
+  box-sizing: border-box; /* Upewnij się, że padding nie wpływa na rozmiar elementu */
+  transition: all 0.3s ease; /* Płynne przejście efektów */
+  resize: vertical; /* Pozwala na zmianę wysokości */
+}
+
+/* Efekt po najechaniu (focus) */
+.record-page-comment-edit-input:focus {
+  outline: none; /* Usuwamy domyślną obramowanie */
+  border-color: #007BFF; /* Zmiana koloru obramowania na niebieski */
+  background-color: #ffffff; /* Białe tło po focusie */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Subtelny cień */
+}
+
+/* Stylizacja placeholdera (tekst pomocniczy) */
+.record-page-comment-edit-input::placeholder {
+  color: #aaa; /* Jasnoszary kolor placeholdera */
+  font-style: italic; /* Pochylony tekst */
+}
+
+
+
+.record-page-comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+.record-page-comment-edit-actions button:first-child {
+  margin-right: 10px;
+}
+
+.record-page-comment-edit-actions button:last-child {
+  margin-left: 10px;
+}
+
+
+.record-page-comment-header,
+.record-page-comment-author-info {
+  min-width: 100px;
+}
+
+
+/* Responsywność - Mniejsze urządzenia */
+@media (max-width: 600px) {
+  .record-page-comment-list-input {
+    font-size: 14px;
+    min-height: 80px;
   }
-  
-  .comment-list-input {
-    width: 100%;
+
+  .record-page-comment-list-add-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .record-page-comment-item {
     padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    resize: vertical;
-    min-height: 100px;
+    margin-bottom: 15px;
   }
-  
-  .comment-list-add-btn {
-    align-self: flex-start;
-    margin-top: 10px;
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+
+  .record-page-comment-text {
+    font-size: 14px;
   }
-  
-  .comment-list-add-btn:hover {
-    background-color: #0056b3;
+
+  .record-page-comment-author-name {
+    font-size: 14px;
   }
-  
-  .comment-item {
-    background-color: #ffffff;
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  .record-page-comment-actions {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .comment-item:hover {
-    background-color: #f1f1f1;
+
+  .record-page-comment-actions button {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    margin-top: 5px;
   }
-  
-  .comment-text {
-    font-size: 16px;
-    color: #333;
-    line-height: 1.6;
-  }
-  
-  .comment-list-empty {
-    text-align: center;
-    font-size: 18px;
-    color: #888;
-    margin-top: 30px;
-  }
-  
-  .comment-list-loading,
-  .comment-list-error {
-    text-align: center;
-    font-size: 18px;
-    color: #888;
-    margin-top: 30px;
-  }
-  
+}

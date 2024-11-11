@@ -5,24 +5,31 @@ const fs = require('fs');
 const bucket = require('../config/firebase');
 
 exports.getUserProfile = async (req, res) => {
-  const userId = req.params.id;
-
+  const userId = req.user ? req.user.id : null; // Sprawdź, czy req.user istnieje
+  const profileId = parseInt(req.params.id, 10);
+  
+  
   try {
-    const user = await User.findByPk(userId, { attributes: { exclude: ['haslo'] } });
+    const user = await User.findByPk(profileId, {
+      attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika'],
+    });
 
     if (!user) {
       return res.status(404).json({ message: 'Użytkownik nie znaleziony.' });
     }
 
-    const { imie, nazwisko, email, photo, banner, opis, typ_uzytkownika } = user;
-    const nagrania = await Record.findAll({ where: { uzytkownik_id: userId } });
+    const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika } = user;
+    const nagrania = await Record.findAll({ where: { uzytkownik_id: profileId } });
 
-    res.status(200).json({ imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania });
+    console.log("User data:", { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika });  // Logowanie danych użytkownika
+
+    res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Błąd przy pobieraniu użytkownika.' });
   }
 };
+
 
 
 exports.updateUserProfile = async (req, res) => {
