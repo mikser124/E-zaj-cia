@@ -1,41 +1,74 @@
-const User = require('../models/userModel');
+const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); 
 
 exports.register = async (req, res) => {
   const { imie, nazwisko, email, haslo, typ_uzytkownika = 'student' } = req.body;
 
+  // Walidacja e-maila
   const emailRegex = /^[a-zA-Z0-9._%+-]+@(pollub\.edu\.pl|pollub\.pl)$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: 'Adres e-mail musi mieć domenę pollub.edu.pl lub pollub.pl' });
   }
+  console.log(Object.keys(User));
+  try {
+    // Sprawdzenie, czy użytkownik o podanym e-mailu już istnieje
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Użytkownik o podanym emailu już istnieje.' });
+    }
 
-  const [existingUser] = await User.findByEmail(email);
-  if (existingUser.length > 0) {
-    return res.status(400).json({ message: 'Użytkownik o podanym emailu już istnieje.' });
+    // Haszowanie hasła
+    const hashedPassword = await bcrypt.hash(haslo, 10);
+
+    // Tworzenie nowego użytkownika
+    await User.create({
+      imie,
+      nazwisko,
+      email,
+      haslo: hashedPassword,
+      typ_uzytkownika
+    });
+
+    res.status(201).json({ message: 'Rejestracja przebiegła pomyślnie.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Wystąpił błąd podczas rejestracji użytkownika.' });
   }
-
-  const hashedPassword = await bcrypt.hash(haslo, 10);
-  await User.create(imie, nazwisko, email, hashedPassword, typ_uzytkownika);
-  res.status(201).json({ message: 'Rejestracja przebiegła pomyślnie.' });
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res) => { 
   const { email, haslo } = req.body;
 
-  const [user] = await User.findByEmail(email);
-  if (user.length === 0) {
-    return res.status(400).json({ message: 'Nieprawidłowy email lub hasło.' });
-  }
+  try {
+    // Sprawdzenie, czy użytkownik istnieje w bazie
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(400).json({ message: 'Nieprawidłowy email lub hasło.' });
+    }
 
-  const validPassword = await bcrypt.compare(haslo, user[0].haslo);
-  if (!validPassword) {
-    return res.status(400).json({ message: 'Nieprawidłowy email lub hasło.' });
-  }
+    // Porównanie hasła
+    const validPassword = await bcrypt.compare(haslo, user.haslo);
+    if (!validPassword) {
+      return res.status(400).json({ message: 'Nieprawidłowy email lub hasło.' });
+    }
 
-  const token = jwt.sign(
-    { id: user[0].id, imie: user[0].imie, typ_uzytkownika: user[0].typ_uzytkownika },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
-  );  
-  res.status(200).json({ message: 'Logowanie przebiegło pomyślnie.', token,  id: user[0].id, imie: user[0].imie, typ_uzytkownika: user[0].typ_uzytkownika }); }
+    // Generowanie tokenu JWT
+    const token = jwt.sign(
+      { id: user.id, imie: user.imie, typ_uzytkownika: user.typ_uzytkownika },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({
+      message: 'Logowanie przebiegło pomyślnie.',
+      token,
+      id: user.id,
+      imie: user.imie,
+      typ_uzytkownika: user.typ_uzytkownika
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Wystąpił błąd podczas logowania.' });
+  }
+};

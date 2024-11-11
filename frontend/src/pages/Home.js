@@ -2,14 +2,13 @@ import React from 'react';
 //import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import '../styles/Home.css'
-
+import RecordList from '../components/RecordList';
 
 function Home() {
   const { isAuthenticated, user } = useAuth();
   console.log(user);
   return (
     <div className="home-container">
-      <h1>Witamy na stronie głównej</h1>
       {isAuthenticated ? (
         <div>
           <h2>Witaj, {user.imie}!</h2>
@@ -26,6 +25,7 @@ function Home() {
       ) : (
         <p>Witamy! Zaloguj się lub zarejestruj, aby uzyskać pełny dostęp do platformy.</p>
       )}
+        <RecordList />  
     </div>
   );
 }

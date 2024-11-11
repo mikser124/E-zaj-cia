@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; 
 import { useAuth } from '../AuthContext'; 
 import '../styles/Record.css';
+import CommentList from './CommentList';
 
 const Record = () => {
   const { token, loading } = useAuth(); 
@@ -48,6 +49,7 @@ const Record = () => {
         const userData = await userResponse.json();
         setUserData(userData);
 
+
       } catch (error) {
         setError(error.message);
       } finally {
@@ -69,39 +71,43 @@ const Record = () => {
   }
 
   return (
-<div className="record-container">
-  {/* Wideo po lewej stronie */}
-  <div className="video-container">
-    <video controls>
-      <source src={recordData.url} type="video/mp4" />
-      Twoja przeglądarka nie wspiera tagu wideo.
-    </video>
-  </div>
+    <div className="record-page-wrapper">
+      <div className="record-page-record-container">
+        {/* Video on the left side */}
+        <div className="record-page-video-container">
+          <video controls>
+            <source src={recordData.url} type="video/mp4" />
+            Twoja przeglądarka nie wspiera tagu wideo.
+          </video>
+        </div>
 
-  {/* Szczegóły nagrania po prawej stronie */}
-  <div className="record-details">
-    <h2 className="record-title">{recordData.tytul}</h2>
+        {/* Recording details on the right side */}
+        <div className="record-page-record-details">
+          <h2 className="record-page-record-title">{recordData.tytul}</h2>
+          <p><strong>Opis:</strong> {recordData.opis || 'Brak opisu'}</p>
+          <p><strong>Data nagrania:</strong> {new Date(recordData.data_nagrania).toLocaleDateString()}</p>
 
-    <p><strong>Opis:</strong> {recordData.opis || 'Brak opisu'}</p>
-    <p><strong>Data nagrania:</strong> {new Date(recordData.data_nagrania).toLocaleDateString()}</p>
+          {/* Likes count and "Like" button */}
+          <div className="record-page-likes-container">
+            <span>{recordData.likes} Polubienia</span>
+            <button className="like-button">Lubię to</button>
+          </div>
 
-    {/* Liczba polubień i przycisk "Lubię to" */}
-    <div className="likes-container">
-      <span>{recordData.likes} Polubienia</span>
-      <button className="like-button">Lubię to</button>
-    </div>
-
-    {/* Autor nagrania */}
-    <div className="author-container">
-      <div className="author-info">
-        <img src={userData ? userData.avatarUrl : '/path/to/default-avatar.jpg'} alt="Autor" />
-        <span>{userData ? `${userData.imie} ${userData.nazwisko}` : 'Nieznany autor'}</span>
+          {/* Recording author */}
+          <div className="record-page-author-container">
+            <div className="record-page-author-info">
+              <img src={userData ? userData.avatarUrl : '/path/to/default-avatar.jpg'} alt="Autor" />
+              <span>{userData ? `${userData.imie} ${userData.nazwisko}` : 'Nieznany autor'}</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
+      {/* Komponent z komentarzami poniżej nagrania */}
+      <CommentList nagranie_id={id} />
+    </div>
   );
+
 };
 
 export default Record;

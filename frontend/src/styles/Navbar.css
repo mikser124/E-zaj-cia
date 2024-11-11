@@ -1,12 +1,17 @@
 .navbar {
-    background-color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
+  background-color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Фіксуємо навігацію */
+  top: 0; /* Розміщуємо на верхній частині екрану */
+  left: 0; /* Вирівнюємо ліворуч */
+  width: 100%; /* Даемо ширину 100% екрану */
+  z-index: 1000; /* Робимо поверх інших елементів */
+  box-sizing: border-box; /* Включаємо врахування padding в ширину */
+}
   .navbar-logo {
     font-size: 24px;
     font-weight: bold;

@@ -10,7 +10,7 @@ import AddRecordingModal from './AddRecordingModal';
 
 const UserProfile = () => {
   const { id } = useParams();
-  const { user, token } = useAuth(); 
+  const { user, token } = useAuth();
   const [userData, setUserData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -20,7 +20,7 @@ const UserProfile = () => {
     const fetchUser = async () => {
       const response = await fetch(`http://localhost:3000/user/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -33,14 +33,14 @@ const UserProfile = () => {
     };
 
     fetchUser();
-  }, [id, token]); 
+  }, [id, token]);
 
   const fetchUpdatedUser = async () => {
-    if (!token) return; 
+    if (!token) return;
 
     const response = await fetch(`http://localhost:3000/user/${id}`, {
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
     const data = await response.json();
@@ -49,34 +49,47 @@ const UserProfile = () => {
   };
 
   const handlePhotoUpload = async (e) => {
-    if (!token) return; 
-
+    if (!token) return;
+  
     const formData = new FormData();
-    formData.append('photo', e.target.files[0]);
-    const response = await fetch(`http://localhost:3000/user/${id}/photo`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` }, 
+    formData.append('photo', e.target.files[0]);  
+  
+    const response = await fetch(`http://localhost:3000/user/${id}/update-photo`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
+  
     if (response.ok) {
-      await fetchUpdatedUser();
+      await fetchUpdatedUser();  
+    } else {
+      const data = await response.json();
+      console.error('Błąd podczas aktualizacji zdjęcia profilowego:', data.message);
     }
   };
+  
 
   const handleBannerUpload = async (e) => {
-    if (!token) return; 
-
+    if (!token) return;
+  
     const formData = new FormData();
     formData.append('banner', e.target.files[0]);
-    const response = await fetch(`http://localhost:3000/user/${id}/banner`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` }, 
+  
+    console.log('FormData przed wysłaniem:', formData);  // Sprawdź, czy plik jest dodany do FormData
+  
+    const response = await fetch(`http://localhost:3000/user/${id}/update-banner`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
+  
     if (response.ok) {
       await fetchUpdatedUser();
+    } else {
+      console.error('Błąd podczas wysyłania banera:', await response.text());
     }
   };
+  
 
   if (!userData) return <div>Ładowanie...</div>;
 

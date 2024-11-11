@@ -1,3 +1,9 @@
+.profile-container{
+  margin-top: 100px;
+
+}
+
+
 .profile-banner {
     width: 90%; /* Ograniczenie szerokości do 80% */
   
@@ -9,9 +15,6 @@
     padding: 20px; /* Opcjonalne wypełnienie wewnętrzne */
 }
 
-
-
- 
   .profile-info {
     display: flex;
     align-items: center;
@@ -124,8 +127,6 @@
 
 .record-list {
   margin: 5%
-  
-
 }
 
 .record-grid {
