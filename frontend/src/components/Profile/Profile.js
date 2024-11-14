@@ -7,6 +7,7 @@ import defaultAvatar from '../../assets/images/defaultAvatar.png';
 import { useAuth } from '../../AuthContext';
 import Button from './Button';
 import AddRecordingModal from './AddRecordingModal';
+import axios from 'axios'; 
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -18,17 +19,13 @@ const UserProfile = () => {
     if (!token) return;
 
     const fetchUser = async () => {
-      const response = await fetch(`http://localhost:3000/user/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-      if (response.ok) {
-        setUserData(data);
-      } else {
-        console.error(data.message);
+      try {
+        const response = await axios.get(`http://localhost:3000/user/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.error(error.response?.data?.message || 'Błąd pobierania użytkownika');
       }
     };
 
@@ -38,14 +35,14 @@ const UserProfile = () => {
   const fetchUpdatedUser = async () => {
     if (!token) return;
 
-    const response = await fetch(`http://localhost:3000/user/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    if (response.ok) setUserData(data);
-    else console.error(data.message);
+    try {
+      const response = await axios.get(`http://localhost:3000/user/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUserData(response.data);
+    } catch (error) {
+      console.error(error.response?.data?.message || 'Błąd pobierania zaktualizowanego użytkownika');
+    }
   };
 
   const handlePhotoUpload = async (e) => {
@@ -54,17 +51,13 @@ const UserProfile = () => {
     const formData = new FormData();
     formData.append('photo', e.target.files[0]);
   
-    const response = await fetch(`http://localhost:3000/user/${id}/update-photo`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` }, 
-      body: formData,
-    });
-  
-    if (response.ok) {
-      await fetchUpdatedUser();  
-    } else {
-      const data = await response.json();
-      console.error('Błąd podczas aktualizacji zdjęcia profilowego:', data.message);
+    try {
+      await axios.post(`http://localhost:3000/user/${id}/update-photo`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      await fetchUpdatedUser();
+    } catch (error) {
+      console.error('Błąd podczas aktualizacji zdjęcia profilowego:', error.response?.data?.message);
     }
   };
   
@@ -74,21 +67,15 @@ const UserProfile = () => {
     const formData = new FormData();
     formData.append('banner', e.target.files[0]);
   
-  
-    const response = await fetch(`http://localhost:3000/user/${id}/update-banner`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },  
-      body: formData,
-    });
-  
-    if (response.ok) {
+    try {
+      await axios.post(`http://localhost:3000/user/${id}/update-banner`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       await fetchUpdatedUser();
-    } else {
-      console.error('Błąd podczas wysyłania banera:', await response.text());
+    } catch (error) {
+      console.error('Błąd podczas wysyłania banera:', error.response?.data?.message);
     }
   };
-  
-
   if (!userData) return <div>Ładowanie...</div>;
 
   const { imie, nazwisko, photo, banner, opis, nagrania, typ_uzytkownika } = userData;

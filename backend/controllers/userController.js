@@ -5,7 +5,7 @@ const fs = require('fs');
 const bucket = require('../config/firebase');
 
 exports.getUserProfile = async (req, res) => {
-  const userId = req.user ? req.user.id : null; // Sprawdź, czy req.user istnieje
+  const userId = req.user ? req.user.id : null; 
   const profileId = parseInt(req.params.id, 10);
   
   
@@ -21,7 +21,6 @@ exports.getUserProfile = async (req, res) => {
     const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika } = user;
     const nagrania = await Record.findAll({ where: { uzytkownik_id: profileId } });
 
-    console.log("User data:", { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika });  // Logowanie danych użytkownika
 
     res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania });
   } catch (error) {
@@ -69,7 +68,7 @@ const deleteOldFile = (filePath) => {
 
 const uploadFile = (file, userId, type) => {
   const folder = type === 'photo' ? 'photos' : 'banners';
-  const filePath = `uploads/${folder}/${userId}-${Date.now()}-${file.name}`; // Nazwa pliku, który będzie zapisany
+  const filePath = `uploads/${folder}/${userId}-${Date.now()}-${file.name}`; 
   
   return new Promise((resolve, reject) => {
     file.mv(path.join(__dirname, '..', filePath), (err) => {

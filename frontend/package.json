@@ -13,6 +13,7 @@
     "axios": "^1.7.7",
     "firebase": "^10.14.1",
     "font-awesome": "^4.7.0",
+    "hls.js": "^1.5.17",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-modal": "^3.16.1",

@@ -20,7 +20,7 @@ function Navbar() {
           <>
             <Link to="/" className="navbar-link">Strona główna</Link>
 
-            <Link to={`/profile/${user ? user.id : ''}`} className="navbar-link">Mój profil</Link> {/* Zmieniono link na /user */}
+            <Link to={`/profile/${user ? user.id : ''}`} className="navbar-link">Mój profil</Link> 
             
             <span onClick={handleLogout} className="navbar-link">Wyloguj się</span>
           </>

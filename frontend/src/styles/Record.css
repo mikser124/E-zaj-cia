@@ -9,6 +9,7 @@
   padding: 20px; /* Optional: Add some padding */
   background-color: #f9f9f9; /* Tło dla całego wrappera */
 }
+
 /* Główne kontenery */
 .record-page-record-container {
   display: flex;
@@ -21,20 +22,12 @@
   position: relative; /* Dodane: umożliwia pozycjonowanie absolutne dla dzieci */
 }
 
-/* Kontener autora w prawym dolnym rogu */
-.record-page-author-container {
-  position: absolute; /* Dodane: umożliwia umieszczenie elementu w prawym dolnym rogu */
-  bottom: 20px; /* Odstęp od dolnej krawędzi */
-  right: 20px; /* Odstęp od prawej krawędzi */
-  display: flex;
-  align-items: center;
-}
+
 
 .record-page-author-info {
   display: flex;
   align-items: center;
   text-decoration: none; /* Usunięcie podkreślenia domyślnie */
-
 }
 
 .record-page-author-info img {
@@ -87,16 +80,48 @@
   margin: 5px 0;
 }
 
+.record-page-author-likes-container {
+  display: flex;
+  justify-content: space-between;  /* Rozdziela polubienie i autora na przeciwnych końcach */
+  align-items: center;
+  margin-top: auto;  /* Przenosi na dół kontenera */
+  width: 100%;  /* Zapewnia pełną szerokość kontenera */
+}
+
 .record-page-likes-container {
   display: flex;
   align-items: center;
-  margin-top: 15px;
 }
 
 .record-page-likes-container span {
-  font-size: 18px;
+  font-size: 22px;
   color: #888;
   margin-right: 10px;
+
+}
+
+.record-page-author-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;  /* Ustawia autora po prawej stronie */
+}
+
+/* Domyślny styl ikony */
+.fa-thumbs-up {
+  font-size: 22px;
+  color: #ccc;  /* Kolor dla niepolubionych */
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+/* Kolor ikony po polubieniu */
+.fa-thumbs-up.liked {
+  color: black; /* Kolor dla polubionych */
+}
+
+/* Kolor ikony, gdy nie jest polubione */
+.fa-thumbs-up.not-liked {
+  color: #ccc; /* Szary kolor dla niepolubionych */
 }
 
 /* Media Queries (opcjonalne dla responsywności) */

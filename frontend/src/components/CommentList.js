@@ -12,7 +12,7 @@ const CommentList = ({ nagranie_id }) => {
   const [error, setError] = useState(null);
   const [editCommentId, setEditCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState('');
-  const [originalCommentText, setOriginalCommentText] = useState(''); // Nowy stan do przechowywania oryginalnego tekstu komentarza
+  const [originalCommentText, setOriginalCommentText] = useState(''); 
   const [users, setUsers] = useState({});
 
   const fetchComments = useCallback(async () => {

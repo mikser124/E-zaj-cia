@@ -16,6 +16,7 @@ module.exports = (sequelize) => {
   Record.associate = (models) => {
     Record.belongsTo(models.User, { foreignKey: 'uzytkownik_id' });
     Record.hasMany(models.Comment, { foreignKey: 'nagranie_id', onDelete: 'cascade' });
+    Record.hasMany(models.Like, { foreignKey: 'nagranie_id', onDelete: 'cascade' });
   };
 
   return Record;

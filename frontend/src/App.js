@@ -9,6 +9,7 @@ import { AuthProvider } from './AuthContext';
 import Navbar from './components/Navbar';
 import ProfilePage from './pages/ProfilePage';
 import Record from './components/Record'; 
+import StartLive from './components/StartLive'; 
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/profile/:id" element={<ProfilePage />} />
             <Route path="/record/:id" element={<Record />} />
+            <Route path="/start-live" element={<StartLive />} />
           </Routes>
       </Router>
     </AuthProvider>

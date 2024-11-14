@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { storage } from '../../firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import axios from 'axios';  // Importowanie axios
 
 Modal.setAppElement('#root'); 
 
@@ -9,6 +10,8 @@ const AddRecordingModal = ({ isOpen, onRequestClose, userId }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isError, setIsError] = useState(false);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -27,29 +30,35 @@ const AddRecordingModal = ({ isOpen, onRequestClose, userId }) => {
             await uploadBytes(fileRef, file);
             const url = await getDownloadURL(fileRef); 
 
-            const response = await fetch(`http://localhost:3000/user/${userId}/records`, { 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-                body: JSON.stringify({
+            // Użycie axios zamiast fetch
+            const response = await axios.post(
+                `http://localhost:3000/user/${userId}/records`,
+                {
                     title,
                     description,
-                    url, 
-                }),
-            });
+                    url,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                }
+            );
 
-            if (response.ok) {
-                onRequestClose();
+            if (response.status === 200) {
+                setIsSuccess(true); // Ustawienie stanu sukcesu
+                onRequestClose(); // Zamknięcie modalu
                 setTitle('');
                 setDescription('');
                 setFile(null);
             } else {
                 console.error('Błąd podczas dodawania nagrania');
+                setIsError(true); // Ustawienie stanu błędu
             }
         } catch (error) {
             console.error('Błąd podczas przesyłania pliku do Firebase:', error);
+            setIsError(true); // Ustawienie stanu błędu
         }
     };
 
@@ -95,6 +104,9 @@ const AddRecordingModal = ({ isOpen, onRequestClose, userId }) => {
                 <button type="submit">Dodaj</button>
                 <button type="button" onClick={onRequestClose}>Anuluj</button>
             </form>
+
+            {isSuccess && <p style={{ color: 'green' }}>Nagranie zostało dodane pomyślnie!</p>}
+            {isError && <p style={{ color: 'red' }}>Wystąpił błąd podczas dodawania nagrania. Spróbuj ponownie.</p>}
         </Modal>
     );
 };

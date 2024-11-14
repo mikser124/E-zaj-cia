@@ -1,10 +1,11 @@
-// server.js
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const nms = require('./media_server');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const db = require('./models');
+const liveRoutes = require('./routes/liveRoutes');
 
 dotenv.config();
     
@@ -21,12 +22,15 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const recordRoutes = require('./routes/recordRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const likeRouter = require("./routes/likeRoutes");
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/record', recordRoutes);
 app.use('/comment', commentRoutes);
+app.use("/like", likeRouter);
+app.use('/api/live', liveRoutes);
 
 app.get('/', (req, res) => {
   res.send('Witamy na stronie głównej serwera');
@@ -41,3 +45,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serwer działa na http://localhost:${PORT}`);
 });
+
+nms.run();
