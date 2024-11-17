@@ -131,7 +131,22 @@ const UserProfile = () => {
       </div>
 
       {!isStudent && (
+        
         <div className="record-list">
+          {isOwnProfile && (
+            <div>
+                <Button
+                  label="Dodaj nagranie"
+                  onClick={() => setIsModalOpen(true)} 
+                  variant="addVideo"
+                />
+
+              <Link to="/start-live">
+                <Button label="Rozpocznij transmisję na żywo" variant="live" />
+              </Link>
+            </div>
+
+          )}
           {nagrania && nagrania.length > 0 ? (
             <div className="record-grid">
               {nagrania.map((record) => (
@@ -148,13 +163,7 @@ const UserProfile = () => {
           ) : (
             null
           )}
-          {isOwnProfile && (
-            <Button
-              label="Dodaj nagranie"
-              onClick={() => setIsModalOpen(true)} 
-              variant="addVideo"
-            />
-          )}
+
           <AddRecordingModal 
             isOpen={isModalOpen} 
             onRequestClose={() => setIsModalOpen(false)} 

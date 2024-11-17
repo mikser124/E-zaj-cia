@@ -23,7 +23,7 @@ function App() {
             <Route path="/profile/:id" element={<ProfilePage />} />
             <Route path="/record/:id" element={<Record />} />
             <Route path="/start-live" element={<StartLive />} />
-            <Route path="/live/:id" element={<LivePage />} />
+            <Route path="/live/:userId" element={<LivePage />} />
           </Routes>
       </Router>
     </AuthProvider>

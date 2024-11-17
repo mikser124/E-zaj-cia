@@ -27,6 +27,7 @@
     "mysql2": "^3.11.4",
     "node-media-server": "^2.7.0",
     "sequelize": "^6.37.5",
+    "socket.io": "^4.8.1",
     "uuid": "^11.0.3"
   }
 }

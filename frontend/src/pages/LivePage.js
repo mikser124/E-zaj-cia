@@ -4,10 +4,10 @@ import Live from '../components/Live';
 import '../styles/Live.css'
 
 const LivePage = () => {
-  const { id } = useParams(); 
+  const { userId } = useParams(); 
   return (
     <div className='live-page-wrapper'>
-      <Live liveId={id} />
+      <Live userId={userId} />
     </div>
   );
 };

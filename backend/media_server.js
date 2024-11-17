@@ -1,6 +1,6 @@
 const NodeMediaServer = require('node-media-server');
 const dotenv = require('dotenv');
-const { User } = require('./models');
+const { User, Live } = require('./models'); 
 
 dotenv.config();
 
@@ -49,8 +49,6 @@ async function loadValidKeys() {
   }
 }
 
-
-
 nms.on('preConnect', async (id, streamPath, args) => {
   const session = nms.getSession(id);
   const actualUrl = streamPath.tcUrl || '';
@@ -73,7 +71,8 @@ nms.on('prePublish', (id, streamPath, args) => {
   }
 
   const key = streamPath.split('/').pop();
-  console.log('Otrzymany klucz:', key);
+  session.title = global.temporaryTitles[key] || 'Domyślny tytuł';
+  console.log(`[NMS] Przypisano tytuł dla sesji ${id}: ${session.title}`);
 
   if (!key || key === 'undefined') {
     console.log('Brak klucza transmisji, publikacja odrzucona.');
@@ -89,5 +88,81 @@ nms.on('prePublish', (id, streamPath, args) => {
 
   console.log(`Połączenie dozwolone dla klucza: ${key}`);
 });
+
+
+
+nms.on('postPublish', async (id, streamPath, args) => {
+  const session = nms.getSession(id);
+  const tytul = session.title || 'Domyślny tytuł';
+  console.log(`[NMS] Transmisja rozpoczęta z tytułem: ${tytul}`);
+
+  const key = streamPath.split('/').pop();
+  console.log(`[NMS] Transmisja rozpoczęta z kluczem: ${key}`);
+
+  try {
+    // Pobierz użytkownika na podstawie klucza
+    const user = await User.findOne({ where: { klucz: key } });
+
+    if (!user) {
+      console.error(`[NMS] Nie znaleziono użytkownika z kluczem: ${key}`);
+      return;
+    }
+
+
+    // Utwórz nowy wpis transmisji
+    const liveEntry = await Live.create({
+      uzytkownik_id: user.id,
+      tytul,
+      data_rozpoczecia: new Date(),
+    });
+
+    console.log(`[NMS] Transmisja została zarejestrowana w bazie: ID=${liveEntry.id}`);
+    delete temporaryTitles[key]; // Usunięcie tymczasowego tytułu, jeśli istnieje
+  } catch (error) {
+    console.error(`[NMS] Błąd podczas rejestracji transmisji: ${error.message}`);
+  }
+});
+
+
+
+nms.on('donePublish', async (id, streamPath, args) => {
+  const key = streamPath.split('/').pop();
+  console.log(`[NMS] Transmisja zakończona z kluczem: ${key}`);
+
+  try {
+    // Pobierz użytkownika i otwartą transmisję w jednym zapytaniu
+    const user = await User.findOne({ where: { klucz: key } });
+    if (!user) {
+      console.error(`[NMS] Nie znaleziono użytkownika z kluczem: ${key}`);
+      return;
+    }
+
+    const liveEntry = await Live.findOne({
+      where: {
+        uzytkownik_id: user.id,
+        data_zakonczenia: null,
+      },
+    });
+
+    if (!liveEntry) {
+      console.warn(`[NMS] Nie znaleziono aktywnej transmisji dla użytkownika: ID=${user.id}`);
+      return;
+    }
+
+    if (global.temporaryTitles[key]) {
+      delete global.temporaryTitles[key];
+      console.log(`[NMS] Usunięto tytuł z pamięci dla klucza: ${key}`);
+    }
+    
+    // Zaktualizuj datę zakończenia transmisji
+    liveEntry.data_zakonczenia = new Date();
+    await liveEntry.save();
+
+    console.log(`[NMS] Zakończono transmisję: ID=${liveEntry.id}`);
+  } catch (error) {
+    console.error(`[NMS] Błąd podczas aktualizacji zakończenia transmisji: ${error.message}`);
+  }
+});
+
 
 module.exports = nms;

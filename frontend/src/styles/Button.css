@@ -29,3 +29,18 @@
 .btn.addVideo:hover{
     background-color: rgba(0, 0, 0, 0.7); 
 }
+
+.btn.live {
+    position: relative; 
+    top: 10px; 
+    right: 10px;
+    background-color: transparent; 
+    border: 1px solid black; 
+    margin-left: 20px;
+}
+
+.btn.live:hover{
+    background-color: rgba(0, 0, 0, 0.7); 
+}
+
+

@@ -2,54 +2,77 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
 import '../styles/StartLive.css';
+import { Link } from 'react-router-dom';
 
 const StartLive = () => {
-  const { token } = useAuth();  
-  const [userKey, setUserKey] = useState('');
+  const { token, user } = useAuth();
+  const [streamTitle, setStreamTitle] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [rtmpUrl, setRtmpUrl] = useState('');
-  const [hlsUrl, setHlsUrl] = useState('');
+  const [userKey, setUserKey] = useState('');
   const [isLiveReady, setIsLiveReady] = useState(false);
-  const [streamTitle, setStreamTitle] = useState('');
-  const [liveId, setLiveId] = useState(''); 
 
-  const handleStartLive = async () => {
-    if (!streamTitle.trim()) {
-      setErrorMessage('Proszę wprowadzić nazwę transmisji.');
-      return;
-    }
-
+  const handleSetTitle = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:3000/api/live', 
-        {
-          tytul: streamTitle, 
-          data_rozpoczecia: new Date(),
+      console.log("Sprawdzanie aktywnej transmisji...");
+
+      const checkResponse = await axios.get('http://localhost:3000/api/live/check-active', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
+      });
+
+      console.log("Odpowiedź na zapytanie o aktywność transmisji:", checkResponse.data);
+
+      if (checkResponse.data.active) {
+        setErrorMessage('Masz już aktywną transmisję. Proszę zakończyć poprzednią, zanim rozpoczniesz nową.');
+        return;
+      }
+
+      console.log("Brak aktywnej transmisji. Sprawdzanie tytułu...");
+
+      if (!streamTitle.trim()) {
+        setErrorMessage('Proszę wprowadzić nazwę transmisji.');
+        return;
+      }
+
+      const response = await axios.post(
+        'http://localhost:3000/api/live/title',
+        { tytul: streamTitle },
         {
           headers: {
-            Authorization: `Bearer ${token}`,  
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      const { userKey, rtmpUrl, live: { id } } = response.data;
-      setUserKey(userKey); 
-      setRtmpUrl(rtmpUrl);
-      setHlsUrl(hlsUrl);
-      setLiveId(id); 
+      const { key } = response.data;
+      setUserKey(key);
+      setRtmpUrl(`rtmp://localhost:1935/live`);
       setIsLiveReady(true);
       setErrorMessage('');
+
+      console.log("Tytuł transmisji został zapisany, odpowiedź:", response.data);
+
     } catch (error) {
-      console.error("Błąd podczas tworzenia transmisji:", error);
-      setErrorMessage('Nie udało się rozpocząć transmisji. Spróbuj ponownie.');
+      if (error.response) {
+        if (error.response.data.error && error.response.data.error.includes('Masz już aktywną transmisję')) {
+          setErrorMessage(error.response.data.error); 
+        } else {
+          setErrorMessage('Nie udało się zapisać tytułu transmisji.');
+        }
+      } else if (error.request) {
+        setErrorMessage('Brak odpowiedzi od serwera. Spróbuj ponownie później.');
+      } else {
+        setErrorMessage('Nie udało się zapisać tytułu transmisji.');
+      }
     }
   };
 
   return (
     <div className="start-live-form-container">
       <h2 className="start-live-form-title">Stworzenie transmisji</h2>
-      
+
       {!isLiveReady && (
         <form className="start-live-form">
           <div className="start-live-form-field">
@@ -61,34 +84,31 @@ const StartLive = () => {
                 value={streamTitle}
                 onChange={(e) => setStreamTitle(e.target.value)}
                 placeholder="Wprowadź nazwę transmisji"
-                name="tytul"
                 className="start-live-input"
               />
             </label>
           </div>
 
-          <button type="button" onClick={handleStartLive} className="start-live-button">
+          <button type="button" onClick={handleSetTitle} className="start-live-button">
             Rozpocznij transmisję
           </button>
 
-          {errorMessage && <p className="start-live-error" style={{ color: 'red' }}>{errorMessage}</p>}
+          {errorMessage && <p className="start-live-error">{errorMessage}</p>}
         </form>
       )}
 
       {isLiveReady && (
         <div className="start-live-info">
-          <h3>Aby uruchomić transmisję w OBS Studio, wykonaj poniższe kroki:</h3>
-          <p><strong>1. Wprowadź URL RTMP:</strong> {rtmpUrl}</p>
-          <p><strong>2. Wprowadź klucz transmisji:</strong> {userKey}</p>
-          <p>Po skonfigurowaniu OBS, rozpocznij transmisję w programie.</p>
+          <h3>Konfiguracja OBS:</h3>
+          <p><strong>URL RTMP:</strong> {rtmpUrl}</p>
+          <p><strong>Klucz transmisji:</strong> {userKey}</p>
 
-          <h3>Aby oglądać transmisję na żywo, przejdź do tego linku:</h3>
+          <h3>Link do oglądania:</h3>
           <p>
-            <a href={`/live/${liveId}`} target="_blank" rel="noopener noreferrer">
+            <Link to={`/live/${user.id}`}>
               Oglądaj transmisję
-            </a>
+            </Link>
           </p>
-          <p>Użyj tego linku, aby obejrzeć transmisję na żywo w przeglądarce.</p>
         </div>
       )}
     </div>

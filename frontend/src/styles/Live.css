@@ -1,104 +1,256 @@
-/* Kontener główny strony */
+/* Wrapper główny */
 .live-page-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-    flex-direction: column;
-    text-align: center;
-    margin-top: 40px;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: flex-start; /* Wyrównanie do góry */
+  flex-direction: column; /* Zastosowanie kolumnowego układu */
+  margin-top: 40px;
+  min-height: 100vh; /* Minimum height to fill the viewport */
+  padding: 20px; /* Optional: Add some padding */
+  background-color: #f9f9f9; /* Tło dla całego wrappera */
+}
+
+/* Główne kontenery */
+.live-page-record-container {
+  display: flex;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 2px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  flex-wrap: wrap; /* Zapewnia, że elementy mogą przejść do nowej linii */
+  position: relative; /* Dodane: umożliwia pozycjonowanie absolutne dla dzieci */
+}
+
+/* Kontener wideo */
+.live-page-video-container {
+  flex: 1;
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Zmieniamy na kolumnowy układ */
+  height: 100%;
+}
+
+/* Przyciski odtwarzania */
+.play-button {
+  margin-top: 10px; /* Daje odstęp między wideo a przyciskiem */
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+  border: 2px solid #000000;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.play-button:hover {
+  background-color: black;
+  color: white;
+}
+
+
+
+/* Przyciski odtwarzania */
+.live-page-video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+
+/* Szczegóły transmisji */
+.live-page-record-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tytuł transmisji */
+.live-page-record-title {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Opis i data transmisji */
+.live-page-record-details p {
+  font-size: 18px;
+  color: #555;
+  margin: 5px 0;
+}
+
+/* Kontener na autora i polubienia */
+.live-page-author-likes-container {
+  display: flex;
+  justify-content: space-between;  /* Rozdziela polubienie i autora na przeciwnych końcach */
+  align-items: center;
+  margin-top: auto;  /* Przenosi na dół kontenera */
+  width: 100%;  /* Zapewnia pełną szerokość kontenera */
+}
+
+/* Informacje o autorze */
+.live-page-author-info {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Usunięcie podkreślenia domyślnie */
+}
+
+.live-page-author-info img {
+  width: 40px;  /* Zmniejszenie zdjęcia do małego rozmiaru */
+  height: 40px; /* Ustalona wysokość, aby zachować proporcje */
+  border-radius: 50%; /* Okrągły kształt zdjęcia */
+  object-fit: cover; /* Utrzymanie proporcji obrazu w okrągłej ramce */
+  margin-right: 10px; /* Odstęp między zdjęciem a imieniem autora */
+}
+
+.live-page-author-info span {
+  font-size: 18px;
+  color: #333;
+}
+
+/* Stylizacja linków (autor) */
+.live-page-author-info:hover {
+  text-decoration: underline;
+}
+
+/* Styl ikony polubienia */
+.live-page-likes-container {
+  display: flex;
+  align-items: center;
+}
+
+.live-page-likes-container span {
+  font-size: 22px;
+  color: #888;
+  margin-right: 10px;
+}
+
+/* Ikona polubienia */
+.fa-thumbs-up {
+  font-size: 22px;
+  color: #ccc;  /* Kolor dla niepolubionych */
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+/* Kolor ikony po polubieniu */
+.fa-thumbs-up.liked {
+  color: black; /* Kolor dla polubionych */
+}
+
+/* Kolor ikony, gdy nie jest polubione */
+.fa-thumbs-up.not-liked {
+  color: #ccc; /* Szary kolor dla niepolubionych */
+}
+
+/* Media Queries (opcjonalne dla responsywności) */
+
+/* Dla większych ekranów */
+@media (max-width: 1200px) {
+  .live-page-record-title {
+    font-size: 24px;
   }
-  
-  /* Nagłówek */
-  h1 {
-    font-size: 2rem;
+
+  .live-page-record-details p {
+    font-size: 16px;
+  }
+
+  .live-page-likes-container span {
+    font-size: 16px;
+  }
+
+  .live-page-author-info span {
+    font-size: 16px;
+  }
+}
+
+/* Dla średnich ekranów */
+@media (max-width: 1100px) {
+  .live-page-record-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .live-page-video-container {
+    margin-right: 0;
     margin-bottom: 20px;
   }
-  
-  /* Kontener dla dwóch kolumn */
-  .live-page-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1200px;
+
+  .live-page-record-details {
+    flex: 1;
     margin-top: 20px;
   }
-  
-  /* Kolumna 1: Wideo */
+
+  .live-page-record-title {
+    font-size: 26px;
+  }
+
+  .live-page-record-details p {
+    font-size: 17px;
+  }
+
+  .live-page-likes-container span {
+    font-size: 17px;
+  }
+
+  .live-page-author-info span {
+    font-size: 17px;
+  }
+}
+
+/* Dla mniejszych ekranów */
+@media (max-width: 900px) {
+  .live-page-record-title {
+    font-size: 22px;
+  }
+
+  .live-page-record-details p {
+    font-size: 15px;
+  }
+
+  .live-page-likes-container span {
+    font-size: 15px;
+  }
+
+  .live-page-author-info span {
+    font-size: 15px;
+  }
+}
+
+/* Dla małych urządzeń mobilnych */
+@media (max-width: 600px) {
+  .live-page-record-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
   .live-page-video-container {
-    flex: 1;
-    max-width: 60%;
-    margin-right: 20px;
-  }
-  
-  /* Wideo - zmniejszone, responsywne */
-  .live-page-video-container video {
-    width: 100%;
-    height: auto;
-    border: 1px solid #ccc;
-  }
-  
-  /* Kolumna 2: Detale transmisji */
-  .live-page-details-container {
-    flex: 1;
-    max-width: 35%;
-    padding-left: 20px;
-  }
-  
-  /* Detale transmisji */
-  .live-page-details {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .live-page-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  
-  .live-page-description {
-    font-size: 1rem;
-    color: #555;
+    margin-right: 0;
     margin-bottom: 20px;
+    height: 400px;
   }
-  
-  .live-page-description p {
-    margin-bottom: 10px;
+
+  .live-page-record-title {
+    font-size: 18px;
   }
-  
-  .play-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+
+  .live-page-record-details p {
+    font-size: 12px;
   }
-  
-  .play-button:hover {
-    background-color: #0056b3;
+
+  .live-page-likes-container span {
+    font-size: 12px;
   }
-  
-  /* Styl na ekranach mniejszych niż 768px */
-  @media (max-width: 768px) {
-    .live-page-container {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .live-page-video-container,
-    .live-page-details-container {
-      max-width: 100%;
-      margin: 0;
-    }
-  
-    .live-page-video-container video {
-      max-width: 100%;
-    }
+
+  .live-page-author-info span {
+    font-size: 12px;
   }
-  
+
+  /* Stylizacja na małych ekranach */
+  .live-page-record-title {
+    font-size: 18px;
+  }
+}
