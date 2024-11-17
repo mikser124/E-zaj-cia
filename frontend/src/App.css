@@ -1,7 +1,7 @@
 body {
-  font-family: 'Roboto', sans-serif; /* Ustawiamy Roboto jako domyślną czcionkę */
-  line-height: 1.6; /* Odstęp między liniami */
-  color: #333; /* Kolor tekstu */
+  font-family: 'Roboto', sans-serif; 
+  line-height: 1.6; 
+  color: #333; 
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -9,21 +9,20 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-/* Przycisk */
 button {
   font-family: 'Roboto', sans-serif;
-  font-weight: 400; /* Standardowa grubość czcionki */
+  font-weight: 400; 
 }
 
 textarea {
-  font-family: 'Roboto', sans-serif; /* Używamy Roboto dla wszystkich textarea */
-  font-size: 16px; /* Dostosowanie rozmiaru czcionki */
-  line-height: 1.5; /* Dostosowanie wysokości linii, aby było czytelniejsze */
-  color: #333; /* Kolor tekstu */
-  background-color: #fff; /* Kolor tła, aby pole było białe */
-  border: 1px solid #ccc; /* Border wokół textarea */
-  border-radius: 5px; /* Zaokrąglenie rogów */
-  padding: 10px; /* Dodatkowe odstępy wewnątrz pola */
-  box-sizing: border-box; /* Zapewnia, że padding nie wpływa na rozmiar elementu */
-  resize: vertical; /* Pozwala na zmianę wysokości textarea, ale nie szerokości */
+  font-family: 'Roboto', sans-serif; 
+  font-size: 16px;
+  line-height: 1.5; 
+  color: #333;
+  background-color: #fff; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box; 
+  resize: vertical; 
 }

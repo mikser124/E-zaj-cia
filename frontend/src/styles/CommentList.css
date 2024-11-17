@@ -19,40 +19,39 @@
 
 .record-page-comment-list-input {
   width: 100%;
-  padding: 15px; /* Większe odstępy wewnętrzne */
+  padding: 15px; 
   font-family: 'Roboto', sans-serif; 
-  font-size: 16px; /* Większa czcionka */
-  line-height: 1.5; /* Większa przestrzeń między liniami */
+  font-size: 16px; 
+  line-height: 1.5; 
   margin-bottom: 10px;
-  border-radius: 8px; /* Zaokrąglone rogi */
-  border: 1px solid #ccc; /* Subtelna ramka */
-  background-color: #f7f7f7; /* Tło o bardzo jasnym szarym kolorze */
-  color: #333; /* Kolor tekstu */
-  box-sizing: border-box; /* Upewnij się, że padding nie wpływa na rozmiar elementu */
-  transition: all 0.3s ease; /* Płynne przejście efektów */
-  resize: vertical; /* Pozwala na zmianę wysokości */
+  border-radius: 8px; 
+  border: 1px solid #ccc; 
+  background-color: #f7f7f7; 
+  color: #333; 
+  box-sizing: border-box; 
+  transition: all 0.3s ease; 
+  resize: vertical; 
 }
 
 .record-page-comment-list-input:focus {
-  outline: none; /* Usuwamy domyślną obramowanie */
-  border-color: #007BFF; /* Zmiana koloru obramowania na niebieski */
-  background-color: #ffffff; /* Białe tło po focusie */
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Subtelny cień */
+  outline: none; 
+  border-color: #007BFF;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
 }
 
 .record-page-comment-list-input::placeholder {
   font-family: 'Roboto', sans-serif; 
-  color: #aaa; /* Jasnoszary kolor placeholdera */
-  font-style: italic; /* Pochylony tekst */
+  color: #aaa;
+  font-style: italic; 
 }
 
 .record-page-comment-list-input-container {
-  margin-bottom: 20px; /* Przestrzeń między polem komentarza a przyciskiem */
+  margin-bottom: 20px; 
 }
 
 
 
-/* Komentarze */
 .record-page-comment-item {
   background-color: #ffffff;
   padding: 12px;
@@ -73,7 +72,6 @@
   line-height: 1.6;
 }
 
-/* Gdy nie ma komentarzy */
 .record-page-comment-list-empty {
   font-family: 'Roboto', sans-serif; 
 
@@ -83,7 +81,6 @@
   margin-top: 30px;
 }
 
-/* Loading i Error */
 .record-page-comment-list-loading,
 .record-page-comment-list-error {
   font-family: 'Roboto', sans-serif; 
@@ -94,7 +91,6 @@
   margin-top: 30px;
 }
 
-/* Nagłówek komentarza (użytkownik, avatar) */
 .record-page-comment-header {
   display: flex;
   justify-content: space-between;
@@ -122,30 +118,28 @@
 
 .record-page-comment-edit-input {
   width: 100%;
-  padding: 15px; /* Większe odstępy wewnętrzne */
-  font-size: 16px; /* Większa czcionka */
-  line-height: 1.5; /* Większa przestrzeń między liniami */
-  border-radius: 8px; /* Zaokrąglone rogi */
-  border: 1px solid #ccc; /* Subtelna ramka */
-  background-color: #f7f7f7; /* Tło o bardzo jasnym szarym kolorze */
-  color: #333; /* Kolor tekstu */
-  box-sizing: border-box; /* Upewnij się, że padding nie wpływa na rozmiar elementu */
-  transition: all 0.3s ease; /* Płynne przejście efektów */
-  resize: vertical; /* Pozwala na zmianę wysokości */
+  padding: 15px; 
+  font-size: 16px; 
+  line-height: 1.5; 
+  border-radius: 8px; 
+  border: 1px solid #ccc;
+  background-color: #f7f7f7; 
+  color: #333;
+  box-sizing: border-box; 
+  transition: all 0.3s ease; 
+  resize: vertical; 
 }
 
-/* Efekt po najechaniu (focus) */
 .record-page-comment-edit-input:focus {
-  outline: none; /* Usuwamy domyślną obramowanie */
-  border-color: #007BFF; /* Zmiana koloru obramowania na niebieski */
-  background-color: #ffffff; /* Białe tło po focusie */
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Subtelny cień */
+  outline: none; 
+  border-color: #007BFF;
+  background-color: #ffffff; 
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
 }
 
-/* Stylizacja placeholdera (tekst pomocniczy) */
 .record-page-comment-edit-input::placeholder {
-  color: #aaa; /* Jasnoszary kolor placeholdera */
-  font-style: italic; /* Pochylony tekst */
+  color: #aaa; 
+  font-style: italic; 
 }
 
 
@@ -172,7 +166,6 @@
 }
 
 
-/* Responsywność - Mniejsze urządzenia */
 @media (max-width: 600px) {
   .record-page-comment-list-input {
     font-size: 14px;

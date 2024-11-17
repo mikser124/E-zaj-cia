@@ -1,6 +1,5 @@
 const { Record } = require('../models/');
 
-// Pobieranie nagrania po ID
 const getRecordingById = async (req, res) => {
   try {
     const { id } = req.params;  
@@ -17,7 +16,6 @@ const getRecordingById = async (req, res) => {
   }
 };
 
-// Usuwanie nagrania
 const deleteRecording = async (req, res) => {
   try {
     const { id } = req.params;  

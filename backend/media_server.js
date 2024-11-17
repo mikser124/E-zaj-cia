@@ -1,8 +1,6 @@
 const NodeMediaServer = require('node-media-server');
 const dotenv = require('dotenv');
-const { Live } = require('./models');
-const fs = require('fs-extra');
-const path = require('path');
+const { User } = require('./models');
 
 dotenv.config();
 
@@ -36,21 +34,38 @@ const config = {
 
 const nms = new NodeMediaServer(config);
 
-nms.on('preConnect', (id, streamPath, args) => {
+let validKeys = [];
+
+async function loadValidKeys() {
+  try {
+    const users = await User.findAll({
+      where: { klucz: { [require('sequelize').Op.ne]: null } },
+      attributes: ['klucz'],
+    });
+    validKeys = users.map(user => user.klucz);
+    console.log('Załadowano klucze użytkowników:', validKeys);
+  } catch (error) {
+    console.error('Błąd podczas ładowania kluczy użytkowników:', error);
+  }
+}
+
+
+
+nms.on('preConnect', async (id, streamPath, args) => {
   const session = nms.getSession(id);
-  
-  const actualUrl = streamPath.tcUrl || ''; 
+  const actualUrl = streamPath.tcUrl || '';
   session.actualUrl = actualUrl;
 
   console.log(`Zapisany URL w sesji: ${actualUrl}`);
+
+  await loadValidKeys();
 });
 
-nms.on('prePublish', async (id, streamPath, args) => {
+nms.on('prePublish', (id, streamPath, args) => {
   const session = nms.getSession(id);
-  
+
   const expectedUrl = 'rtmp://localhost:1935/live';
-  
-  const actualUrl = session.actualUrl || ''; 
+  const actualUrl = session.actualUrl || '';
   if (actualUrl !== expectedUrl) {
     console.log(`Nieprawidłowy URL transmisji: ${actualUrl}, publikacja odrzucona.`);
     session.reject();
@@ -66,22 +81,13 @@ nms.on('prePublish', async (id, streamPath, args) => {
     return;
   }
 
-  try {
-    const liveStream = await Live.findOne({ where: { klucz: key } });
-
-    if (!liveStream) {
-      console.log(`Nieprawidłowy klucz transmisji: ${key}, publikacja odrzucona.`);
-      session.reject();
-      return;
-    }
-
-    console.log(`Połączenie dozwolone dla klucza: ${key}`);
-  } catch (error) {
-    console.error('Błąd podczas weryfikacji klucza transmisji:', error);
+  if (!validKeys.includes(key)) {
+    console.log(`Nieprawidłowy klucz transmisji: ${key}, publikacja odrzucona.`);
     session.reject();
+    return;
   }
+
+  console.log(`Połączenie dozwolone dla klucza: ${key}`);
 });
-
-
 
 module.exports = nms;

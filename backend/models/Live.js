@@ -12,16 +12,12 @@ module.exports = (sequelize) => {
     },
     data_zakonczenia: { 
       type: DataTypes.DATE, 
-      allowNull: false, 
+      allowNull: true, 
     },
     uzytkownik_id: { 
       type: DataTypes.INTEGER, 
       allowNull: false 
     },
-    klucz: { 
-      type: DataTypes.STRING,
-      allowNull: false,
-    }
   }, {
     tableName: 'transmisja',
     timestamps: false,

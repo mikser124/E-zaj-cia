@@ -5,12 +5,12 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: fixed; /* Фіксуємо навігацію */
-  top: 0; /* Розміщуємо на верхній частині екрану */
-  left: 0; /* Вирівнюємо ліворуч */
-  width: 100%; /* Даемо ширину 100% екрану */
-  z-index: 1000; /* Робимо поверх інших елементів */
-  box-sizing: border-box; /* Включаємо врахування padding в ширину */
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  z-index: 1000; 
+  box-sizing: border-box; 
 }
   .navbar-logo {
     font-size: 24px;

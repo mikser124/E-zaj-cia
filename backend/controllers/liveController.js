@@ -1,70 +1,51 @@
-const { Live } = require('../models');
-const { v4: uuidv4 } = require('uuid'); 
+const { Live, User } = require('../models');
 
 exports.createLive = async (req, res) => {
   try {
-    const { tytul, data_rozpoczecia, data_zakonczenia } = req.body;
+    const { tytul, data_rozpoczecia } = req.body;
 
-    console.log('Request body:', req.body);
-    console.log('User from token:', req.user);
 
-    if (!tytul || !data_rozpoczecia || !data_zakonczenia) {
-      return res.status(400).json({ error: "Brakuje wymaganych danych" });
+    if (!tytul || !data_rozpoczecia) {
+      return res.status(400).json({ error: 'Brakuje wymaganych danych' });
+    }
+
+    if (!req.user, !req.user.id) {
+      return res.status(401).json({ error: 'Brak autoryzacji' });
     }
 
 
-    if (!req.user || !req.user.id) {
-      return res.status(401).json({ error: "Brak autoryzacji" });
+
+    const user = await User.findByPk(req.user.id);
+
+
+    if (!user || user.typ_uzytkownika !== 'prowadzacy') {
+      return res.status(403).json({ error: 'Nie masz uprawnień do tej operacji.' });
     }
 
-    const { id: uzytkownik_id } = req.user; 
-
-    const klucz = uuidv4();
-
+    if (!user.klucz) {
+      return res.status(400).json({ error: 'Nie przypisano klucza do użytkownika.' });
+    }
 
     const newLive = await Live.create({
-      tytul,  
+      tytul,
       data_rozpoczecia,
-      data_zakonczenia,
-      uzytkownik_id, 
-      klucz,
+      uzytkownik_id: user.id,
     });
 
-    const rtmpUrl = `rtmp://localhost:1935/live/${klucz}`;
-    const hlsUrl = `http://localhost:8000/media/live/${klucz}/index.m3u8`;
+    const rtmpUrl = `rtmp://localhost:1935/live`;
+    const hlsUrl = `http://localhost:8000/live/${user.klucz}/index.m3u8`;
 
-    return res.status(201).json({
+    res.status(201).json({
       live: newLive,
-      klucz: newLive.klucz,
       rtmpUrl,
-      hlsUrl
+      hlsUrl,
+      userKey: user.klucz,
     });
-
   } catch (error) {
-    console.error("Error creating live stream:", error);  
-    return res.status(500).json({ error: error.message });
+    console.error('Error creating live stream:', error);
+    res.status(500).json({ error: error.message });
   }
 };
-
-
-  exports.checkLiveKey = async (req, res) => {
-    try {
-      const { klucz } = req.params;
-  
-      const live = await Live.findOne({
-        where: { klucz: klucz },
-      });
-  
-      if (!live) {
-        return res.status(404).json({ message: 'Nieprawidłowy klucz transmisji' });
-      }
-  
-      res.status(200).json({ message: 'Prawidłowy klucz. Transmisja może zostać rozpoczęta.' });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
-
 
 exports.getLive = async (req, res) => {
   try {
@@ -76,7 +57,21 @@ exports.getLive = async (req, res) => {
       return res.status(404).json({ message: 'Transmisja nie znaleziona' });
     }
 
-    res.status(200).json(live);
+    const user = await User.findByPk(live.uzytkownik_id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Nie znaleziono autora transmisji' });
+    }
+
+    const hlsUrl = `http://localhost:8000/live/${user.klucz}/index.m3u8`;
+
+    res.status(200).json({
+      id: live.id,
+      tytul: live.tytul,
+      data_rozpoczecia: live.data_rozpoczecia,
+      uzytkownik_id: live.uzytkownik_id,
+      hlsUrl: hlsUrl,  
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -98,6 +93,8 @@ exports.deleteLive = async (req, res) => {
     if (!live) {
       return res.status(404).json({ message: 'Transmisja nie znaleziona' });
     }
+
+    await live.update({ data_zakonczenia: new Date() });
 
     await live.destroy();
     res.status(200).json({ message: 'Transmisja usunięta' });

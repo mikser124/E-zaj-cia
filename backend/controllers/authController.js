@@ -17,13 +17,15 @@ exports.register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(haslo, 10);
+    const klucz = uuidv4();
 
     await User.create({
       imie,
       nazwisko,
       email,
       haslo: hashedPassword,
-      typ_uzytkownika
+      typ_uzytkownika,
+      klucz: typ_uzytkownika === 'prowadzący' ? klucz : null,
     });
 
     res.status(201).json({ message: 'Rejestracja przebiegła pomyślnie.' });

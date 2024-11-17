@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   const User = sequelize.define('User', {
@@ -11,6 +12,7 @@ module.exports = (sequelize) => {
     opis: { type: DataTypes.STRING },
     typ_uzytkownika: { type: DataTypes.STRING, defaultValue: 'student' },
     liczba_polubien: { type: DataTypes.INTEGER, defaultValue: 0 },
+    klucz: { type: DataTypes.STRING, allowNull: true, unique: true, defaultValue: uuidv4 }
   }, {
     tableName: 'uzytkownik',
     timestamps: false,

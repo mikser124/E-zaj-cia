@@ -3,7 +3,7 @@ const router = express.Router();
 const liveController = require('../controllers/liveController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/',  authMiddleware, liveController.createLive);
+router.post('/', authMiddleware, liveController.createLive);
 
 router.get('/:id', liveController.getLive);
 

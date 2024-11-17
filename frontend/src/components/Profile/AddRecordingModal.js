@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { storage } from '../../firebaseConfig'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import axios from 'axios';  // Importowanie axios
+import axios from 'axios';  
 
 Modal.setAppElement('#root'); 
 
@@ -47,18 +47,18 @@ const AddRecordingModal = ({ isOpen, onRequestClose, userId }) => {
             );
 
             if (response.status === 200) {
-                setIsSuccess(true); // Ustawienie stanu sukcesu
-                onRequestClose(); // Zamknięcie modalu
+                setIsSuccess(true); 
+                onRequestClose(); 
                 setTitle('');
                 setDescription('');
                 setFile(null);
             } else {
                 console.error('Błąd podczas dodawania nagrania');
-                setIsError(true); // Ustawienie stanu błędu
+                setIsError(true); 
             }
         } catch (error) {
             console.error('Błąd podczas przesyłania pliku do Firebase:', error);
-            setIsError(true); // Ustawienie stanu błędu
+            setIsError(true); 
         }
     };
 

@@ -11,18 +11,18 @@ exports.getUserProfile = async (req, res) => {
   
   try {
     const user = await User.findByPk(profileId, {
-      attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika'],
+      attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika', 'klucz'],
     });
 
     if (!user) {
       return res.status(404).json({ message: 'Użytkownik nie znaleziony.' });
     }
 
-    const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika } = user;
+    const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, klucz } = user;
     const nagrania = await Record.findAll({ where: { uzytkownik_id: profileId } });
 
 
-    res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania });
+    res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania, klucz});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Błąd przy pobieraniu użytkownika.' });

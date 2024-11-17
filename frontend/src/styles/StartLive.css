@@ -1,0 +1,78 @@
+.start-live-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    margin: 50px 0;
+    margin-top: 100px;
+}
+
+.start-live-form {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.start-live-form-field {
+    margin-bottom: 15px;
+}
+
+.start-live-form-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px; 
+    color: #000000; 
+    font-weight: normal;
+}
+
+.start-live-form-field label {
+    display: block; 
+    text-align: center; 
+}
+
+.start-live-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.start-live-button {
+    background-color: white;
+    color: black;
+    border: 2px solid #000000;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.start-live-button:hover {
+    background-color: black;
+    color: white;
+}
+
+.start-live-info {
+    text-align: center;
+}
+
+.start-live-error {
+    text-align: center;
+    color: red;
+    font-weight: bold;
+}
+
+.start-live-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.start-live-link:hover {
+    text-decoration: underline;
+}

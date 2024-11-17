@@ -1,4 +1,3 @@
-//import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -10,6 +9,7 @@ import Navbar from './components/Navbar';
 import ProfilePage from './pages/ProfilePage';
 import Record from './components/Record'; 
 import StartLive from './components/StartLive'; 
+import LivePage from './pages/LivePage';
 
 function App() {
   return (
@@ -23,6 +23,7 @@ function App() {
             <Route path="/profile/:id" element={<ProfilePage />} />
             <Route path="/record/:id" element={<Record />} />
             <Route path="/start-live" element={<StartLive />} />
+            <Route path="/live/:id" element={<LivePage />} />
           </Routes>
       </Router>
     </AuthProvider>
