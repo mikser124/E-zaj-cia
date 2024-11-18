@@ -6,9 +6,8 @@ import '../styles/Live.css'
 const LivePage = () => {
   const { userId } = useParams(); 
   return (
-    <div className='live-page-wrapper'>
       <Live userId={userId} />
-    </div>
+
   );
 };
 

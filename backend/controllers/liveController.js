@@ -63,7 +63,6 @@ exports.getLive = async (req, res) => {
       uzytkownik_id: live.uzytkownik_id,
       hlsUrl: hlsUrl,
     });
-    console.log("TYTUL: ", tytul);
   } catch (error) {
     console.error('Błąd pobierania transmisji:', error);
     res.status(500).json({ error: 'Wewnętrzny błąd serwera.' });

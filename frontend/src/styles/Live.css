@@ -1,78 +1,148 @@
 /* Wrapper główny */
 .live-page-wrapper {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: flex-start; /* Wyrównanie do góry */
-  flex-direction: column; /* Zastosowanie kolumnowego układu */
-  margin-top: 40px;
-  min-height: 100vh; /* Minimum height to fill the viewport */
-  padding: 20px; /* Optional: Add some padding */
-  background-color: #f9f9f9; /* Tło dla całego wrappera */
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 70px;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 
-/* Główne kontenery */
+/* Kontener na całe wideo i chat */
 .live-page-record-container {
   display: flex;
-  margin: 20px;
-  padding: 20px;
-  border-radius: 2px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  flex-wrap: wrap; /* Zapewnia, że elementy mogą przejść do nowej linii */
-  position: relative; /* Dodane: umożliwia pozycjonowanie absolutne dla dzieci */
-}
-
-/* Kontener wideo */
-.live-page-video-container {
-  flex: 1;
-  margin-right: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; /* Zmieniamy na kolumnowy układ */
+  flex-direction: row;
+  gap: 20px;
+  width: 90%;
   height: 100%;
 }
 
-/* Przyciski odtwarzania */
+/* Lewa kolumna: Wideo i opis */
+.live-page-left-column {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.live-page-video-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 490px; /* Stała wysokość kontenera wideo */
+  max-width: 1000px;
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  line-height: 1;
+  min-height: 350px; /* Ustalona minimalna wysokość */
+  transition: height 0.3s ease; /* Dodanie animacji na zmianę wysokości, jeśli będzie konieczna */
+}
+
+/* Wideo w kontenerze */
+.live-page-video-container video {
+  width: 100%; /* Szerokość 100% kontenera */
+  height: 100%; /* Wysokość dopasowana do kontenera */
+  object-fit: contain; /* Dopasowanie proporcji wideo */
+  border-radius: 8px;
+}
+
+/* Szczegóły transmisji */
+.live-page-record-details {
+
+justify-content: space-between;
+  background-color: #ffffff;
+  padding: 10px; /* Zmniejszenie odstępów */
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex; /* Ustawienie elastycznego układu */
+  flex-wrap: nowrap;
+  line-height: 1;
+  align-items: center; /* Wyśrodkowanie elementów w pionie */
+  overflow: hidden; /* Ukrywa nadmiar */
+  text-overflow: ellipsis; /* Dodaje "..." w przypadku nadmiaru tekstu */
+  gap: 10px; /* Odstępy między elementami */
+  font-size: 12px; /* Mniejsza czcionka */
+  color: #555; /* Neutralny kolor tekstu */
+}
+
+.live-page-chat-column {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  flex: 1; /* Ustalenie, że ta kolumna ma elastyczną wysokość */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Wyśrodkowanie w pionie */
+  align-items: center; /* Wyśrodkowanie w poziomie */
+  position: relative;
+  width: 100%;
+  min-width: 300px; /* Minimalna szerokość, aby zapobiec zbyt małemu widokowi na bardzo małych ekranach */
+}
+
+/* Przycisk odtwarzania (teraz tylko strzałka) */
 .play-button {
-  margin-top: 10px; /* Daje odstęp między wideo a przyciskiem */
-  padding: 10px 20px;
-  background-color: white;
-  color: black;
-  border: 2px solid #000000;
-  border-radius: 4px;
+  position: absolute; /* Pozycjonowanie absolutne względem kontenera */
+  top: 50%; /* Wyrównanie do środka w pionie */
+  left: 50%; /* Wyrównanie do środka w poziomie */
+  transform: translate(-50%, -50%); /* Dokładne wyśrodkowanie przycisku */
+  background-color: transparent; /* Bez tła */
+  border: none; /* Brak obramowania */
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  display: flex; /* Flexbox do centrowania ikony */
+  justify-content: center; /* Wyśrodkowanie poziome */
+  align-items: center; /* Wyśrodkowanie pionowe */
+  font-size: 36px; /* Rozmiar ikony */
+  transition: transform 0.3s ease; /* Dodajemy efekt powiększenia */
 }
 
+/* Efekt najechania na przycisk */
 .play-button:hover {
-  background-color: black;
-  color: white;
+  transform: translate(-50%, -50%) scale(1.2); /* Powiększenie przycisku po najechaniu */
+  background-color: transparent; /* Upewnienie się, że nie ma tła */
 }
 
-
+/* Ikona strzałki (z Font Awesome) */
+.play-button i {
+  color: white; /* Kolor strzałki */
+  font-size: 36px; /* Rozmiar strzałki */
+}
+video::-webkit-media-controls-timeline {
+  display: none;
+}
 
 /* Przyciski odtwarzania */
 .live-page-video-container video {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: auto; /* Zmienia się wysokość w zależności od szerokości kontenera */
+  object-fit: contain; /* Zachowanie proporcji */
   border-radius: 2px;
 }
 
-
-/* Szczegóły transmisji */
-.live-page-record-details {
-  flex: 1;
+.live-page-record-details span {
   display: flex;
-  flex-direction: column;
+  align-items: center;
 }
 
-/* Tytuł transmisji */
+.live-page-record-details p {
+  font-size: 12px;
+  margin: 0; /* Usuń odstępy */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .live-page-record-title {
-  margin-bottom: 10px;
+  font-size: 24px; /* Duża czcionka dla tytułu */
+  font-weight: bold;
+  margin-top: 0px; /* Minimalny odstęp od wideo */
+  margin-bottom: 0px; /* Minimalny odstęp od szczegółów */
+  line-height: 1;
   color: #333;
+  text-align: left;
 }
 
 /* Opis i data transmisji */
@@ -94,20 +164,18 @@
 /* Informacje o autorze */
 .live-page-author-info {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
   text-decoration: none; /* Usunięcie podkreślenia domyślnie */
 }
 
 .live-page-author-info img {
-  width: 40px;  /* Zmniejszenie zdjęcia do małego rozmiaru */
-  height: 40px; /* Ustalona wysokość, aby zachować proporcje */
-  border-radius: 50%; /* Okrągły kształt zdjęcia */
-  object-fit: cover; /* Utrzymanie proporcji obrazu w okrągłej ramce */
-  margin-right: 10px; /* Odstęp między zdjęciem a imieniem autora */
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 5px;
 }
-
 .live-page-author-info span {
-  font-size: 18px;
+  font-size: 14px;
   color: #333;
 }
 
@@ -146,12 +214,10 @@
   color: #ccc; /* Szary kolor dla niepolubionych */
 }
 
-/* Media Queries (opcjonalne dla responsywności) */
-
-/* Dla większych ekranów */
+/* Responsywne dla dużych ekranów */
 @media (max-width: 1200px) {
-  .live-page-record-title {
-    font-size: 24px;
+  .live-page-video-container {
+    max-width: 90%; /* Zmniejszamy maksymalną szerokość wideo */
   }
 
   .live-page-record-details p {
@@ -159,10 +225,6 @@
   }
 
   .live-page-likes-container span {
-    font-size: 16px;
-  }
-
-  .live-page-author-info span {
     font-size: 16px;
   }
 }
@@ -175,12 +237,10 @@
   }
 
   .live-page-video-container {
-    margin-right: 0;
     margin-bottom: 20px;
   }
 
   .live-page-record-details {
-    flex: 1;
     margin-top: 20px;
   }
 
@@ -195,13 +255,9 @@
   .live-page-likes-container span {
     font-size: 17px;
   }
-
-  .live-page-author-info span {
-    font-size: 17px;
-  }
 }
 
-/* Dla mniejszych ekranów */
+/* Dla małych urządzeń mobilnych */
 @media (max-width: 900px) {
   .live-page-record-title {
     font-size: 22px;
@@ -214,43 +270,31 @@
   .live-page-likes-container span {
     font-size: 15px;
   }
-
-  .live-page-author-info span {
-    font-size: 15px;
-  }
 }
 
-/* Dla małych urządzeń mobilnych */
+/* Dla urządzeń mobilnych */
 @media (max-width: 600px) {
-  .live-page-record-container {
-    flex-direction: column;
+  .live-page-wrapper {
     padding: 10px;
   }
 
+  .live-page-record-container {
+    flex-direction: column;
+  }
+
+  .live-page-left-column {
+    width: 100%;
+  }
+
   .live-page-video-container {
-    margin-right: 0;
-    margin-bottom: 20px;
-    height: 400px;
+    height: 250px;
   }
 
   .live-page-record-title {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .live-page-record-details p {
-    font-size: 12px;
+    font-size: 14px;
   }
-
-  .live-page-likes-container span {
-    font-size: 12px;
-  }
-
-  .live-page-author-info span {
-    font-size: 12px;
-  }
-
-  /* Stylizacja na małych ekranach */
-  .live-page-record-title {
-    font-size: 18px;
-  }
-}
+} 

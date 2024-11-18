@@ -2,23 +2,28 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Hls from 'hls.js';
 import { Link } from 'react-router-dom';
+
 import defaultAvatar from '../assets/images/defaultAvatar.png';
+import Chat from './Chat';
+import { useAuth } from '../AuthContext';
 
 const Live = ({ userId }) => {
   const [streamData, setStreamData] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [userData, setUserData] = useState(null); // Added user data for author info
+  const [participantCount, setParticipantCount] = useState(0);  // Zmienna przechowująca liczbę uczestników
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchStreamData = async () => {
       try {
-        // Fetch stream data and user data
         const streamResponse = await axios.get(`http://localhost:3000/api/live/user/${userId}`);
         const userResponse = await axios.get(`http://localhost:3000/user/${userId}`);
-        
-        setUserData(userResponse.data); // Save user data for author info
+
+        setUserData(userResponse.data);
         const data = streamResponse.data;
 
         if (data.hlsUrl) {
@@ -45,71 +50,81 @@ const Live = ({ userId }) => {
       hls.loadSource(streamData.hlsUrl);
       hls.attachMedia(video);
 
-      hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        console.log("MANIFEST_PARSED");
-        if (isPlaying) {
-          video.play();
-        }
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        setIsPlaying(false);
       });
 
-      hls.on(Hls.Events.ERROR, function (event, data) {
-        console.error('HLS error:', event, data);
-        setErrorMessage('Błąd HLS: ' + data.error);
-      });
+      video.onpause = () => setIsPlaying(false);
+      video.onplay = () => setIsPlaying(true);
 
       return () => {
         hls.destroy();
       };
     }
-  }, [streamData, isPlaying]);
+  }, [streamData]);
 
-  const handlePlay = () => {
-    setIsPlaying(true);
-  };
+  useEffect(() => {
+    if (isPlaying && streamData) {
+      const refreshStream = () => {
+        const video = document.getElementById('video');
+        const hls = new Hls();
+
+        hls.loadSource(streamData.hlsUrl);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play();
+          setIsPlaying(true);
+          video.currentTime = video.duration; // Automaticzne ustawienie na żywy punkt
+        });
+
+        return hls;
+      };
+
+      refreshStream();
+    }
+  }, [isPlaying, streamData]);
 
   if (isLoading) {
     return <div>Ładowanie transmisji...</div>;
   }
 
-  const avatarUrl = userData.photo 
-  ? `http://localhost:3000/${userData.photo}` 
-  : defaultAvatar;
+  const avatarUrl = userData?.photo ? `http://localhost:3000/${userData.photo}` : defaultAvatar;
 
   return (
-    <div className="live-page-record-container">
-      <div className="live-page-video-container">
-        {errorMessage && <div className="live-page-error">{errorMessage}</div>}
+    <div className="live-page-wrapper">
+      <div className="live-page-record-container">
+        <div className="live-page-left-column">
+          {errorMessage && <div className="live-page-error">{errorMessage}</div>}
+          {streamData && (
+            <>
+              <div className="live-page-video-container">
+                <video id="video" controls />
 
-        {streamData && (
-          <>
-            <video id="video" controls>
-              Twoja przeglądarka nie obsługuje tagu video.
-            </video>
-            {!isPlaying && (
-              <button onClick={handlePlay} className="play-button">
-                Odtwórz transmisję
-              </button>
-            )}
-          </>
-        )}
-      </div>
-
-      {streamData && userData && (
-        <div className="live-page-record-details">
-          <h2 className="live-page-record-title">{streamData.tytul}</h2>
-          <p><strong>Opis:</strong> {streamData.opis || 'Brak opisu'}</p>
-          <p><strong>Data rozpoczęcia:</strong> {new Date(streamData.data_rozpoczecia).toLocaleDateString()}</p>
-
-          <div className="live-page-author-likes-container">
-            <div className="live-page-author-container">
-              <Link to={`/profile/${userData.id}`} className="live-page-author-info">
-                <img src={avatarUrl || defaultAvatar} alt="Autor" />
-                <span>{`${userData.imie} ${userData.nazwisko}`}</span>
-              </Link>
-            </div>
-          </div>
+                {!isPlaying && (
+                  <button onClick={() => setIsPlaying(true)} className="play-button">
+                    <i className="fas fa-play"></i>
+                  </button>
+                )}
+              </div>
+              <h2 className="live-page-record-title">{streamData.tytul}</h2>
+              <div className="live-page-record-details">
+                <span><strong>Data:</strong> {new Date(streamData.data_rozpoczecia).toLocaleDateString()}</span>
+                <span><strong>Liczba uczestników:</strong> {participantCount}</span>
+                <span className="live-page-author-container">
+                  <Link to={`/profile/${userData.id}`} className="live-page-author-info">
+                    <img src={avatarUrl || defaultAvatar} alt="Autor" />
+                    <span>{`${userData.imie} ${userData.nazwisko}`}</span>
+                  </Link>
+                </span>
+              </div>
+            </>
+          )}
         </div>
-      )}
+        <div className="live-page-chat-column">
+          <Chat userName={user ? `${user.imie} ${user.nazwisko}` : 'Gość'} setParticipantCount={setParticipantCount} /> {/* Przekazanie funkcji do Chat */}
+        </div>
+      </div>
     </div>
   );
 };

@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 const db = require('./models');
 const liveRoutes = require('./routes/liveRoutes');
+const socketConfig = require('./config/socket');
 
 dotenv.config();
     
@@ -42,8 +43,10 @@ db.sequelize.sync()
   .catch(error => console.error("Błąd synchronizacji:", error));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Serwer działa na http://localhost:${PORT}`);
 });
+
+socketConfig(server);
 
 nms.run();
