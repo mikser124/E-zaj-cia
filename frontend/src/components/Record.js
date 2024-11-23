@@ -1,19 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom'; 
+import { useParams, Link, useNavigate } from 'react-router-dom'; 
 import { useAuth } from '../AuthContext'; 
 import axios from 'axios';
 import '../styles/Record.css';
 import CommentList from './CommentList';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
 
+
 const Record = () => {
-  const { token, loading } = useAuth(); 
+  const { user, token, loading } = useAuth(); 
   const { id } = useParams();
   const [recordData, setRecordData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null); 
   const [loadingData, setLoadingData] = useState(true); 
   const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
 
   const fetchUser = useCallback(async (userId) => {
     try {
@@ -94,6 +96,23 @@ const Record = () => {
     fetchRecord();
   }, [id, token, fetchRecord]);
 
+  const handleDelete = async () => {
+    try {
+        await axios.delete(`http://localhost:3000/api/record/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log('Nagranie zostało usunięte z bazy danych.');
+        navigate('/'); 
+    } catch (error) {
+        console.error('Błąd podczas usuwania nagrania:', error);
+        setError('Nie udało się usunąć nagrania. Spróbuj ponownie później.');
+    }
+};
+
+
   if (loading || loadingData) return <div>Ładowanie...</div>;
 
   if (error) return <div>Błąd: {error}</div>; 
@@ -101,6 +120,7 @@ const Record = () => {
   if (!recordData || !userData) {
     return <div>Brak danych do wyświetlenia.</div>;
   }
+
 
   const avatarUrl = userData.photo 
     ? `http://localhost:3000/${userData.photo}` 
@@ -138,6 +158,11 @@ const Record = () => {
               </Link>
             </div>
           </div>
+          {user.id === recordData.uzytkownik_id && ( 
+            <button onClick={handleDelete} className="delete-record-button">
+              Usuń nagranie
+            </button>
+          )}
         </div>
       </div>
 

@@ -33,7 +33,7 @@ function Login() {
     const data = await response.json();
     if (response.ok) {
       alert('Logowanie udane!');
-      login({ id: data.id, imie: data.imie, nazwisko: data.nazwisko, typ_uzytkownika: data.typ_uzytkownika }, data.token);
+      login({ id: data.id, imie: data.imie, nazwisko: data.nazwisko, typ_uzytkownika: data.typ_uzytkownika, rola: data.rola }, data.token);
       navigate('/'); 
     } else {
       alert('Błąd: ' + data.message); 

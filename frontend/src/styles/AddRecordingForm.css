@@ -1,0 +1,123 @@
+.add-recording-page-form {
+    max-width: 500px;
+    margin: 20px auto; 
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+  }
+  
+  .add-recording-page-h2 {
+    text-align: center;
+    color: #333;
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+  
+ 
+  .add-recording-page-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #555;
+    margin: 8px 0 4px;
+    text-align: left; 
+  }
+  
+  .add-recording-page-input,
+  .add-recording-page-textarea,
+  .add-recording-page-select,
+  .add-recording-page-input-file {
+    width: 90%; 
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    margin: 0 auto 15px;
+    display: block; 
+    transition: border-color 0.3s;
+  }
+  
+  .add-recording-page-input:focus,
+  .add-recording-page-textarea:focus,
+  .add-recording-page-select:focus,
+  .add-recording-page-input-file:focus {
+    border-color: #007BFF;
+    outline: none;
+  }
+  
+  .add-recording-page-textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .add-recording-page-button {
+    padding: 10px 18px;
+    background-color: black;
+    color: white;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 90%; 
+    max-width: 400px;
+    margin: 15px auto;
+    display: block;
+  }
+  
+  .add-recording-page-button:hover {
+    background-color: lightgreen;
+  }
+  
+  .add-recording-page-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .add-recording-page-p {
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  
+  .add-recording-page-p-green {
+    color: #28a745;
+  }
+  
+  .add-recording-page-p-red {
+    color: #dc3545;
+  }
+  
+  .category-suggestions {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 95%;
+    position: absolute; 
+    z-index: 10; 
+}
+
+.category-suggestion-item {
+    padding: 5px;
+    cursor: pointer;
+    display: block; 
+}
+
+.category-suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #4caf50;
+}

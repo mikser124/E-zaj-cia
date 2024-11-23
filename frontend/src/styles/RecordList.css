@@ -1,110 +1,156 @@
 .home-page-record-list-container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: white;
-    box-sizing: border-box;
-  }
-  
-  .home-page-record-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .home-page-record-item {
-    display: flex;
-    align-items: stretch;
-    gap: 20px;
-    margin-bottom: 70px;
-    border: 2px solid #333;
-    border-radius: 0;
-    background-color: white;
-    cursor: pointer;
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .home-page-video-container {
-    flex: 0 0 40%;
-    max-width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .home-page-record-video {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.home-page-record-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.home-page-record-item {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  margin-bottom: 70px;
+  border: 2px solid #333;
+  border-radius: 0;
+  background-color: white;
+  cursor: pointer;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.home-page-record-item:hover {
+  background-color: rgb(249, 245, 245);
+}
+
+.home-page-video-container {
+  flex: 0 0 40%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-page-record-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.home-page-video-title {
+  flex: 1;
+  padding: 20px;
+  text-align: left;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+}
+
+.home-page-video-title h3 {
+  margin: 0 auto;
+  font-size: 24px;
+  font-weight: 400;
+  color: #222;
+}
+
+.search-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-input {
+  height: 40px;
+  font-size: 16px;
+  width: 50%;
+  margin-bottom: 20px;
+  background-image: url('https://cdn2.hubspot.net/hubfs/4004166/bioticresearch_website_assets/images/search_icon.png');
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 30px 30px;
+  padding-left: 40px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 2px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #0073e6;
+}
+
+.home-page-live-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+  .home-page-live-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 0;
   }
-  
-  .home-page-video-title {
-    flex: 1;
-    padding: 20px;
-    text-align: left;
-    font-weight: 500;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #333;
-  }
-  
-  .home-page-video-title h3 {
-    margin: 0 auto;
-    font-size: 24px;
-    font-weight: 400;
-    color: #222;
-  }
-  
-  .search-container {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: flex-end;  /* Wyszukiwarka po prawej */
-  }
-  
-  .search-input {
-    height: 40px;  /* Zmniejszona wysokość inputa */
-    font-size: 16px;  /* Większa czcionka */
-    width: 50%;  /* Zwiększona szerokość */
-    margin-bottom: 20px;
-    background-image: url('https://cdn2.hubspot.net/hubfs/4004166/bioticresearch_website_assets/images/search_icon.png');
-    background-repeat: no-repeat;
-    background-position: 10px center;  /* Ustawiamy ikonę na lewej stronie inputa */
-    background-size: 30px 30px;  /* Rozmiar ikony */
-    padding-left: 40px;  /* Odstęp na ikonę */
-    box-sizing: border-box;  /* Umożliwia dodanie paddingu bez zmiany rozmiaru */
-    background-color: #fff;  /* Kolor tła inputa */
-    border: 1px solid #000;  /* Czarne obramowanie */
-    border-radius: 5    px;  /* Zaokrąglone rogi */
-    outline: none;
-  }
-  
-  .search-input:focus {
-    border-color: #0073e6;
-  }
-
  
-/* Stylowanie paska przewijania dla Webkit (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-    width: 8px; /* Szerokość scrollbara */
-    height: 8px; /* Wysokość scrollbara, dla poziomego */
+    width: 8px; 
+    height: 8px; 
   }
   
   ::-webkit-scrollbar-thumb {
-    background-color: #dcdcdc; /* Kolor paska przewijania */
+    background-color: #dcdcdc; 
   }
   
   ::-webkit-scrollbar-track {
-    background: #f0f0f0; /* Kolor tła scrollbara */
+    background: #f0f0f0; 
   }
   
 
+.user-info {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: lightgray;
+  border: black solid 1px;
+  padding: 10px;
+  border-radius: 6px;
+  z-index: 10;
+}
 
-  /* Stylizacja tylko dla urządzeń mobilnych */
+.user-info:hover{
+  text-decoration: underline solid black 1px;
+}
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info p {
+  color: white;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
   @media (max-width: 768px) {
     .home-page-record-item {
       flex-direction: column;
@@ -129,11 +175,8 @@
       padding: 10px;
     }
   
-    /* Zmniejszenie szerokości wyszukiwarki na mniejszych ekranach */
     .search-input {
-      width: 250px;  /* Mniejsza szerokość na urządzeniach mobilnych */
+      width: 250px; 
     }
   }
-  
-
   

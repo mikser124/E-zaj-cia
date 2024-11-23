@@ -1,4 +1,4 @@
-const { Record } = require('../models/');
+const { Record, User } = require('../models/');
 
 const getRecordingById = async (req, res) => {
   try {
@@ -32,17 +32,22 @@ const deleteRecording = async (req, res) => {
   }
 };
 
-// Pobieranie wszystkich nagrań
 const getAllRecordings = async (req, res) => {
   try {
-    const records = await Record.findAll();
-    return res.json(records);
+    const records = await Record.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['imie', 'nazwisko', 'photo'],  
+        }
+      ]
+    });
+    return res.json(records);  
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Wystąpił błąd podczas pobierania nagrań' });
   }
 };
-
 module.exports = {
   getRecordingById,
   deleteRecording,

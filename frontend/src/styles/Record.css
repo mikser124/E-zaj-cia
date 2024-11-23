@@ -1,16 +1,14 @@
-/* Wrapper główny */
 .record-page-wrapper {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  flex-direction: column; /* Center vertically */
+  justify-content: center; 
+  align-items: center;
+  flex-direction: column; 
   margin-top: 40px;
-  min-height: 100vh; /* Minimum height to fill the viewport */
-  padding: 20px; /* Optional: Add some padding */
-  background-color: #f9f9f9; /* Tło dla całego wrappera */
+  min-height: 100vh; 
+  padding: 20px; 
+  background-color: #f9f9f9;
 }
 
-/* Główne kontenery */
 .record-page-record-container {
   display: flex;
   margin: 20px;
@@ -19,7 +17,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   flex-wrap: wrap;
-  position: relative; /* Dodane: umożliwia pozycjonowanie absolutne dla dzieci */
+  position: relative;
 }
 
 
@@ -27,14 +25,14 @@
 .record-page-author-info {
   display: flex;
   align-items: center;
-  text-decoration: none; /* Usunięcie podkreślenia domyślnie */
+  text-decoration: none;
 }
 
 .record-page-author-info img {
-  width: 40px; /* Zwiększenie rozmiaru awatara */
+  width: 40px;
   height: 40px;
-  border-radius: 50%; /* Zaokrąglamy zdjęcie na kształt koła */
-  margin-right: 10px; /* Odstęp między zdjęciem a nazwiskiem */
+  border-radius: 50%; 
+  margin-right: 10px;
 }
 
 .record-page-author-info span {
@@ -46,7 +44,6 @@
   text-decoration: underline; 
 }
 
-/* Reszta stylów dla kontenerów */
 .record-page-video-container {
   flex: 1;
   margin-right: 20px;
@@ -82,10 +79,10 @@
 
 .record-page-author-likes-container {
   display: flex;
-  justify-content: space-between;  /* Rozdziela polubienie i autora na przeciwnych końcach */
+  justify-content: space-between; 
   align-items: center;
-  margin-top: auto;  /* Przenosi na dół kontenera */
-  width: 100%;  /* Zapewnia pełną szerokość kontenera */
+  margin-top: auto; 
+  width: 100%; 
 }
 
 .record-page-likes-container {
@@ -103,28 +100,39 @@
 .record-page-author-container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;  /* Ustawia autora po prawej stronie */
+  justify-content: flex-end;  
 }
 
-/* Domyślny styl ikony */
+.delete-record-button {
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.delete-record-button:hover {
+  background-color: darkred;
+}
+
 .fa-thumbs-up {
   font-size: 22px;
-  color: #ccc;  /* Kolor dla niepolubionych */
+  color: #ccc; 
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
-/* Kolor ikony po polubieniu */
+
 .fa-thumbs-up.liked {
-  color: black; /* Kolor dla polubionych */
+  color: black; 
 }
 
-/* Kolor ikony, gdy nie jest polubione */
 .fa-thumbs-up.not-liked {
-  color: #ccc; /* Szary kolor dla niepolubionych */
+  color: #ccc; 
 }
 
-/* Media Queries (opcjonalne dla responsywności) */
 @media (max-width: 1200px) {
   .record-page-record-title {
     font-size: 24px;

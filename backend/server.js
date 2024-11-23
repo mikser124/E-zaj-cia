@@ -1,11 +1,12 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
-const nms = require('./media_server');
+const { nms } = require('./media_server');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const db = require('./models');
-const liveRoutes = require('./routes/liveRoutes');
+
+
 const socketConfig = require('./config/socket');
 
 dotenv.config();
@@ -23,15 +24,20 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const recordRoutes = require('./routes/recordRoutes');
 const commentRoutes = require('./routes/commentRoutes');
-const likeRouter = require("./routes/likeRoutes");
+const likeRoutes = require("./routes/likeRoutes");
+const liveRoutes = require('./routes/liveRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const pointRoutes = require('./routes/pointRoutes');
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/record', recordRoutes);
 app.use('/comment', commentRoutes);
-app.use("/like", likeRouter);
+app.use("/like", likeRoutes);
 app.use('/api/live', liveRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/points', pointRoutes);
 
 app.get('/', (req, res) => {
   res.send('Witamy na stronie głównej serwera');

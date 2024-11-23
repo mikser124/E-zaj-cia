@@ -6,14 +6,14 @@ import '../../styles/Profile.css';
 import defaultAvatar from '../../assets/images/defaultAvatar.png';
 import { useAuth } from '../../AuthContext';
 import Button from './Button';
-import AddRecordingModal from './AddRecordingModal';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const UserProfile = () => {
   const { id } = useParams();
   const { user, token } = useAuth();
   const [userData, setUserData] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditingOpis, setIsEditingOpis] = useState(false); 
+  const [editedOpis, setEditedOpis] = useState(''); 
 
   useEffect(() => {
     if (!token) return;
@@ -24,6 +24,7 @@ const UserProfile = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(response.data);
+        setEditedOpis(response.data.opis || '');
       } catch (error) {
         console.error(error.response?.data?.message || 'Błąd pobierania użytkownika');
       }
@@ -47,10 +48,10 @@ const UserProfile = () => {
 
   const handlePhotoUpload = async (e) => {
     if (!token) return;
-  
+
     const formData = new FormData();
     formData.append('photo', e.target.files[0]);
-  
+
     try {
       await axios.post(`http://localhost:3000/user/${id}/update-photo`, formData, {
         headers: { Authorization: `Bearer ${token}` },
@@ -60,13 +61,13 @@ const UserProfile = () => {
       console.error('Błąd podczas aktualizacji zdjęcia profilowego:', error.response?.data?.message);
     }
   };
-  
+
   const handleBannerUpload = async (e) => {
     if (!token) return;
-  
+
     const formData = new FormData();
     formData.append('banner', e.target.files[0]);
-  
+
     try {
       await axios.post(`http://localhost:3000/user/${id}/update-banner`, formData, {
         headers: { Authorization: `Bearer ${token}` },
@@ -76,6 +77,23 @@ const UserProfile = () => {
       console.error('Błąd podczas wysyłania banera:', error.response?.data?.message);
     }
   };
+
+  const handleOpisUpdate = async () => {
+    if (!token) return;
+
+    try {
+      await axios.put(
+        `http://localhost:3000/user/${id}/update-description`,
+        { opis: editedOpis },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setIsEditingOpis(false);
+      setUserData((prev) => ({ ...prev, opis: editedOpis }));
+    } catch (error) {
+      console.error('Błąd podczas aktualizacji opisu:', error.response?.data?.message);
+    }
+  };
+
   if (!userData) return <div>Ładowanie...</div>;
 
   const { imie, nazwisko, photo, banner, opis, nagrania, typ_uzytkownika } = userData;
@@ -93,27 +111,27 @@ const UserProfile = () => {
             <img src={avatarUrl} alt="Avatar" className="profile-avatar" />
             {isOwnProfile && (
               <div className="camera-icon">
-                <FontAwesomeIcon 
-                  icon={faCamera} 
-                  size="2x" 
-                  onClick={() => document.querySelector('#photo-upload').click()} 
+                <FontAwesomeIcon
+                  icon={faCamera}
+                  size="2x"
+                  onClick={() => document.querySelector('#photo-upload').click()}
                 />
               </div>
             )}
-            <input 
-              type="file" 
-              id="photo-upload" 
-              onChange={handlePhotoUpload} 
-              accept="image/*" 
-              style={{ display: 'none' }} 
+            <input
+              type="file"
+              id="photo-upload"
+              onChange={handlePhotoUpload}
+              accept="image/*"
+              style={{ display: 'none' }}
             />
           </div>
           <h2 className="profile-name">{`${imie} ${nazwisko}`}</h2>
           {isOwnProfile && (
-            <Button 
-              label="Zmień zdjęcie baneru" 
-              onClick={() => document.querySelector('#banner-upload').click()} 
-              variant="upload" 
+            <Button
+              label="Zmień zdjęcie baneru"
+              onClick={() => document.querySelector('#banner-upload').click()}
+              variant="upload"
             />
           )}
           <input type="file" id="banner-upload" onChange={handleBannerUpload} accept="image/*" style={{ display: 'none' }} />
@@ -122,30 +140,35 @@ const UserProfile = () => {
 
       <div className="profile-comment">
         <img src={avatarUrl} alt="Avatar" className="small-avatar" />
-        <textarea
-          className="comment-textarea"
-          value={opis || ""}
-          onChange={(e) => setUserData((prev) => ({ ...prev, opis: e.target.value }))}
-          placeholder="Napisz coś o sobie..."
-        />
+        {isOwnProfile && isEditingOpis ? (
+          <div>
+            <textarea
+              className="comment-textarea"
+              value={editedOpis}
+              onChange={(e) => setEditedOpis(e.target.value)}
+              placeholder="Napisz coś o sobie..."
+            />
+            <div className='button-group'>
+              <Button label="Zapisz" onClick={handleOpisUpdate} variant="save" />
+              <Button label="Anuluj" onClick={() => setIsEditingOpis(false)} variant="cancel" />
+            </div>
+          </div>
+        ) : (
+          <span className='user-description' onClick={() => isOwnProfile && setIsEditingOpis(true)}>{opis || 'Kliknij, aby dodać opis...'}</span>
+        )}
       </div>
 
       {!isStudent && (
-        
         <div className="record-list">
           {isOwnProfile && (
             <div>
-                <Button
-                  label="Dodaj nagranie"
-                  onClick={() => setIsModalOpen(true)} 
-                  variant="addVideo"
-                />
-
+            <Link to={`/add-recording/${id}`}>
+              <Button label="Dodaj nagranie" variant="addVideo" />
+            </Link>
               <Link to="/start-live">
                 <Button label="Rozpocznij transmisję na żywo" variant="live" />
               </Link>
             </div>
-
           )}
           {nagrania && nagrania.length > 0 ? (
             <div className="record-grid">
@@ -160,15 +183,9 @@ const UserProfile = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            null
-          )}
+          ) : null}
 
-          <AddRecordingModal 
-            isOpen={isModalOpen} 
-            onRequestClose={() => setIsModalOpen(false)} 
-            userId={id} 
-          />
+
         </div>
       )}
     </div>

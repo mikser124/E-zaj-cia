@@ -34,6 +34,7 @@ const config = {
 
 const nms = new NodeMediaServer(config);
 
+global.streamSessions = {};
 let validKeys = [];
 
 async function loadValidKeys() {
@@ -71,6 +72,11 @@ nms.on('prePublish', (id, streamPath, args) => {
   }
 
   const key = streamPath.split('/').pop();
+  if(!global.temporaryTitles[key]){
+    console.log("Próba uruchomienia bez tytulu");
+    session.reject();
+    return;
+  }
   session.title = global.temporaryTitles[key] || 'Domyślny tytuł';
   console.log(`[NMS] Przypisano tytuł dla sesji ${id}: ${session.title}`);
 
@@ -100,7 +106,6 @@ nms.on('postPublish', async (id, streamPath, args) => {
   console.log(`[NMS] Transmisja rozpoczęta z kluczem: ${key}`);
 
   try {
-    // Pobierz użytkownika na podstawie klucza
     const user = await User.findOne({ where: { klucz: key } });
 
     if (!user) {
@@ -108,16 +113,21 @@ nms.on('postPublish', async (id, streamPath, args) => {
       return;
     }
 
-
-    // Utwórz nowy wpis transmisji
+    if (session) {
+      global.streamSessions[user.id] = id;
+      console.log(global.streamSessions);
+    } else {
+      console.error(`[NMS] Nie udało się znaleźć sesji dla klucza: ${key}`);
+    }
     const liveEntry = await Live.create({
       uzytkownik_id: user.id,
       tytul,
       data_rozpoczecia: new Date(),
     });
+    
 
     console.log(`[NMS] Transmisja została zarejestrowana w bazie: ID=${liveEntry.id}`);
-    delete temporaryTitles[key]; // Usunięcie tymczasowego tytułu, jeśli istnieje
+    delete temporaryTitles[key];
   } catch (error) {
     console.error(`[NMS] Błąd podczas rejestracji transmisji: ${error.message}`);
   }
@@ -127,10 +137,8 @@ nms.on('postPublish', async (id, streamPath, args) => {
 
 nms.on('donePublish', async (id, streamPath, args) => {
   const key = streamPath.split('/').pop();
-  console.log(`[NMS] Transmisja zakończona z kluczem: ${key}`);
 
   try {
-    // Pobierz użytkownika i otwartą transmisję w jednym zapytaniu
     const user = await User.findOne({ where: { klucz: key } });
     if (!user) {
       console.error(`[NMS] Nie znaleziono użytkownika z kluczem: ${key}`);
@@ -143,6 +151,7 @@ nms.on('donePublish', async (id, streamPath, args) => {
         data_zakonczenia: null,
       },
     });
+    liveEntry.data_zakonczenia = new Date();
 
     if (!liveEntry) {
       console.warn(`[NMS] Nie znaleziono aktywnej transmisji dla użytkownika: ID=${user.id}`);
@@ -153,16 +162,19 @@ nms.on('donePublish', async (id, streamPath, args) => {
       delete global.temporaryTitles[key];
       console.log(`[NMS] Usunięto tytuł z pamięci dla klucza: ${key}`);
     }
-    
-    // Zaktualizuj datę zakończenia transmisji
-    liveEntry.data_zakonczenia = new Date();
+    if(global.streamSessions[user.id]){ delete global.streamSessions[user.id]; }
+
     await liveEntry.save();
 
+    
     console.log(`[NMS] Zakończono transmisję: ID=${liveEntry.id}`);
+ 
   } catch (error) {
     console.error(`[NMS] Błąd podczas aktualizacji zakończenia transmisji: ${error.message}`);
   }
 });
 
+module.exports = {
+  nms,
+};
 
-module.exports = nms;

@@ -50,7 +50,7 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, imie: user.imie, nazwisko: user.nazwisko, typ_uzytkownika: user.typ_uzytkownika },
+      { id: user.id, imie: user.imie, nazwisko: user.nazwisko, typ_uzytkownika: user.typ_uzytkownika, rola: user.rola },
       process.env.JWT_SECRET,
       { expiresIn: '5h' }
     );
@@ -61,7 +61,8 @@ exports.login = async (req, res) => {
       id: user.id,
       imie: user.imie,
       nazwisko: user.nazwisko,
-      typ_uzytkownika: user.typ_uzytkownika
+      typ_uzytkownika: user.typ_uzytkownika,
+      rola: user.rola
     });
   } catch (error) {
     console.error(error);

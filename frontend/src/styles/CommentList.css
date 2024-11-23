@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-/* Komentarze */
+
 .record-page-comment-list {
-  width: 95%; /* Pełna szerokość dostępnego miejsca w wrapperze */
+  width: 95%; 
   font-family: 'Roboto', sans-serif; 
   margin-top: 20px;
-  background-color: #ffffff; /* Tło dla listy komentarzy */
-  padding: 20px; /* Padding wokół całej listy komentarzy */
-  border-radius: 8px; /* Zaokrąglone rogi */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Cień */
+  background-color: #ffffff; 
+  padding: 20px;
+  border-radius: 8px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .record-page-comment-list-input-container {

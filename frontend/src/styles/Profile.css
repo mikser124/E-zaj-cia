@@ -69,6 +69,15 @@
 }
  
 
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.user-description {
+  margin: 10px;
+}
+
 .small-avatar {
     margin-left: 5%;
     width: 50px; 

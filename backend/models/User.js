@@ -12,7 +12,22 @@ module.exports = (sequelize) => {
     opis: { type: DataTypes.STRING },
     typ_uzytkownika: { type: DataTypes.STRING, defaultValue: 'student' },
     liczba_polubien: { type: DataTypes.INTEGER, defaultValue: 0 },
-    klucz: { type: DataTypes.STRING, allowNull: true, unique: true, defaultValue: uuidv4 }
+    liczba_punktow: { type: DataTypes.INTEGER, defaultValue: 0 },
+    klucz: { type: DataTypes.STRING, allowNull: true, unique: true, defaultValue: uuidv4 },
+    rola: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'Początkujący',
+      get() {
+        if (this.typ_uzytkownika === 'prowadzacy') {
+          return 'Ekspert'; 
+        }
+        const punkty = this.liczba_punktow || 0;
+        if (punkty <= 300) return 'Początkujący';
+        if (punkty <= 700) return 'Praktyk';
+        return 'Ekspert';
+      }
+    }
   }, {
     tableName: 'uzytkownik',
     timestamps: false,
@@ -23,6 +38,9 @@ module.exports = (sequelize) => {
     User.hasMany(models.Comment, { foreignKey: 'uzytkownik_id' });
     User.hasMany(models.Like, { foreignKey: 'uzytkownik_id', onDelete: 'cascade' });
     User.hasMany(models.Live, { foreignKey: 'uzytkownik_id' });
+
+    User.hasMany(models.Points, { as: 'receivedPoints', foreignKey: 'uzytkownik_id' });
+    User.hasMany(models.Points, { as: 'givenPoints', foreignKey: 'prowadzacy_id' });
   };
 
   return User;

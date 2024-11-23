@@ -1,4 +1,5 @@
 const socketIo = require('socket.io');
+const { nms } = require('../media_server');
 
 module.exports = (server) => {
   const io = socketIo(server, {
@@ -6,32 +7,40 @@ module.exports = (server) => {
       origin: "http://localhost:3001",
       methods: ["GET", "POST"],
       allowedHeaders: ["my-custom-header"],
-      credentials: true
-    }
+      credentials: true,
+    },
   });
 
-  // Zmienna przechowująca ID aktywnych użytkowników
-  let activeUsers = new Set();  // Set, który będzie przechowywał unikalne identyfikatory użytkowników
+  let activeUsers = new Map(); // Mapowanie socket.id na userId
 
   io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    // Sprawdzamy, czy użytkownik już istnieje
-    if (!activeUsers.has(socket.id)) {
-      activeUsers.add(socket.id);  // Dodajemy nowe połączenie
-      io.emit('updateUserCount', activeUsers.size);  // Przekazujemy liczbę aktywnych użytkowników
-    }
+    // Obsługa userId
+    socket.on('userConnected', (userId) => {
+      if (![...activeUsers.values()].includes(userId)) {
+        activeUsers.set(socket.id, userId); // Przypisujemy socket.id do userId
+      }
 
-    socket.on('sendMessage', (message) => {
-      io.emit('chatMessage', message);  // Rozsyłamy wiadomości do wszystkich
+      // Wyślij bieżącą liczbę uczestników tylko do nowego użytkownika
+      socket.emit('updateUserCount', activeUsers.size);
+
+      // Emituj do wszystkich, jeśli to nowe połączenie zwiększa liczbę
+      io.emit('updateUserCount', activeUsers.size);
     });
 
+    // Obsługa wiadomości
+    socket.on('sendMessage', (message) => {
+      io.emit('chatMessage', message);
+    });
+
+    // Obsługa rozłączenia użytkownika
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
 
       if (activeUsers.has(socket.id)) {
-        activeUsers.delete(socket.id);  // Usuwamy użytkownika z aktywnych połączeń
-        io.emit('updateUserCount', activeUsers.size);  // Przekazujemy liczbę aktywnych użytkowników
+        activeUsers.delete(socket.id); // Usuń użytkownika z aktywnych
+        io.emit('updateUserCount', activeUsers.size); // Wyślij nową liczbę uczestników
       }
     });
   });

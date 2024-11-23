@@ -18,6 +18,14 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER, 
       allowNull: false 
     },
+    kategoria_id: { 
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Kategoria',
+        key: 'id',
+      },
+      allowNull: true, 
+    },
   }, {
     tableName: 'transmisja',
     timestamps: false,
@@ -25,6 +33,7 @@ module.exports = (sequelize) => {
 
   Live.associate = (models) => {
     Live.belongsTo(models.User, { foreignKey: 'uzytkownik_id' });
+    Live.belongsTo(models.Category, { foreignKey: 'kategoria_id', allowNull: true });
   };
 
   return Live;

@@ -1,5 +1,6 @@
 const { User } = require('../models');
 const { Record } = require('../models');
+const { Category } = require('../models');
 const path = require('path');
 const fs = require('fs');
 const bucket = require('../config/firebase');
@@ -11,18 +12,18 @@ exports.getUserProfile = async (req, res) => {
   
   try {
     const user = await User.findByPk(profileId, {
-      attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika', 'klucz'],
+      attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika', 'klucz', 'rola'],
     });
 
     if (!user) {
       return res.status(404).json({ message: 'Użytkownik nie znaleziony.' });
     }
 
-    const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, klucz } = user;
+    const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, klucz, rola } = user;
     const nagrania = await Record.findAll({ where: { uzytkownik_id: profileId } });
 
 
-    res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania, klucz});
+    res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania, klucz, rola});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Błąd przy pobieraniu użytkownika.' });
@@ -146,8 +147,11 @@ exports.updateBanner = async (req, res) => {
 exports.addRecord = async (req, res) => {
   const userId = req.user.id; 
 
-  const { title, description, url } = req.body; 
-
+  const { title, description, url, kategoria_id  } = req.body; 
+  const category = await Category.findByPk(kategoria_id);
+  if (!category) {
+    return res.status(404).json({ message: 'Kategoria o podanym ID nie istnieje.' });
+  }
   try {
       await Record.create({
           tytul: title,
@@ -156,11 +160,29 @@ exports.addRecord = async (req, res) => {
           data_nagrania: new Date(),
           liczba_polubien: 0,
           uzytkownik_id: userId,
+          kategoria_id: kategoria_id,
       });
 
       res.status(201).json({ message: 'Nagranie zostało dodane do profilu użytkownika.', url });
   } catch (error) {
       console.error('Błąd podczas zapisu nagrania w bazie danych:', error);
       res.status(500).json({ message: 'Błąd podczas zapisywania nagrania.' });
+  }
+};
+
+
+exports.updateDescription = async (req, res) => {
+  const userId = req.user.id; 
+  const { opis } = req.body;
+  try {
+    if (!opis) {
+      return res.status(400).json({ message: 'Pole opis jest wymagane' });
+    }
+
+    await User.update({ opis }, { where: { id: userId } });
+    res.status(200).json({ message: 'Opis zaktualizowany', opis });
+  } catch (error) {
+    console.error('Błąd podczas aktualizacji opisu profila:', error);
+    res.status(500).json({ message: 'Błąd podczas aktualizacji opisu profila' });
   }
 };

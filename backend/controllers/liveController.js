@@ -1,5 +1,6 @@
 const { Live, User } = require('../models');
 
+
 global.temporaryTitles = global.temporaryTitles || {};
 
 exports.setStreamTitle = async (req, res) => {
@@ -99,6 +100,31 @@ exports.deleteLive = async (req, res) => {
   }
 };
 
+exports.getAllActiveLives = async (req, res) => {
+  try {
+   
+    const lives = await Live.findAll({
+      where: { data_zakonczenia: null },
+      include: [
+        {
+          model: User,
+          attributes: ['imie', 'nazwisko', 'photo'], 
+        },
+      ],
+    });
+
+    res.status(200).json({
+      data: lives,
+    });
+  } catch (error) {
+    console.error('Błąd podczas pobierania aktywnych transmisji:', error);
+    res.status(500).json({
+      message: 'Nie udało się pobrać aktywnych transmisji.',
+    });
+  }
+};
+
+
 exports.checkActiveStream = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -120,3 +146,4 @@ exports.checkActiveStream = async (req, res) => {
     res.status(500).json({ error: 'Wewnętrzny błąd serwera.' });
   }
 };
+

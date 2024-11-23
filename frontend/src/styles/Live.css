@@ -1,4 +1,3 @@
-/* Wrapper główny */
 .live-page-wrapper {
   display: flex;
   justify-content: center;
@@ -9,7 +8,6 @@
   background-color: #f9f9f9;
 }
 
-/* Kontener na całe wideo i chat */
 .live-page-record-container {
   display: flex;
   flex-direction: row;
@@ -18,7 +16,6 @@
   height: 100%;
 }
 
-/* Lewa kolumna: Wideo i opis */
 .live-page-left-column {
   flex: 2;
   display: flex;
@@ -31,41 +28,38 @@
   flex-direction: column;
   position: relative;
   width: 100%;
-  height: 490px; /* Stała wysokość kontenera wideo */
+  height: 490px;
   max-width: 1000px;
   background-color: #000;
   border-radius: 8px;
   overflow: hidden;
   line-height: 1;
-  min-height: 350px; /* Ustalona minimalna wysokość */
-  transition: height 0.3s ease; /* Dodanie animacji na zmianę wysokości, jeśli będzie konieczna */
+  min-height: 350px; 
+  transition: height 0.3s ease;
 }
 
-/* Wideo w kontenerze */
 .live-page-video-container video {
-  width: 100%; /* Szerokość 100% kontenera */
-  height: 100%; /* Wysokość dopasowana do kontenera */
-  object-fit: contain; /* Dopasowanie proporcji wideo */
+  width: 100%;
+  height: 100%; 
+  object-fit: contain;
   border-radius: 8px;
 }
 
-/* Szczegóły transmisji */
 .live-page-record-details {
-
-justify-content: space-between;
+  justify-content: space-between;
   background-color: #ffffff;
   padding: 10px; /* Zmniejszenie odstępów */
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  display: flex; /* Ustawienie elastycznego układu */
+  display: flex; 
   flex-wrap: nowrap;
   line-height: 1;
-  align-items: center; /* Wyśrodkowanie elementów w pionie */
-  overflow: hidden; /* Ukrywa nadmiar */
-  text-overflow: ellipsis; /* Dodaje "..." w przypadku nadmiaru tekstu */
-  gap: 10px; /* Odstępy między elementami */
-  font-size: 12px; /* Mniejsza czcionka */
-  color: #555; /* Neutralny kolor tekstu */
+  align-items: center; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  gap: 10px; 
+  font-size: 12px; 
+  color: #555; 
 }
 
 .live-page-chat-column {
@@ -73,43 +67,52 @@ justify-content: space-between;
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  flex: 1; /* Ustalenie, że ta kolumna ma elastyczną wysokość */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Wyśrodkowanie w pionie */
-  align-items: center; /* Wyśrodkowanie w poziomie */
+  justify-content: center;
+  align-items: center; 
   position: relative;
   width: 100%;
-  min-width: 300px; /* Minimalna szerokość, aby zapobiec zbyt małemu widokowi na bardzo małych ekranach */
+  min-width: 300px; 
 }
 
-/* Przycisk odtwarzania (teraz tylko strzałka) */
 .play-button {
-  position: absolute; /* Pozycjonowanie absolutne względem kontenera */
-  top: 50%; /* Wyrównanie do środka w pionie */
-  left: 50%; /* Wyrównanie do środka w poziomie */
-  transform: translate(-50%, -50%); /* Dokładne wyśrodkowanie przycisku */
-  background-color: transparent; /* Bez tła */
-  border: none; /* Brak obramowania */
+  position: absolute;
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  background-color: transparent; 
+  border: none; 
   cursor: pointer;
-  display: flex; /* Flexbox do centrowania ikony */
-  justify-content: center; /* Wyśrodkowanie poziome */
-  align-items: center; /* Wyśrodkowanie pionowe */
-  font-size: 36px; /* Rozmiar ikony */
-  transition: transform 0.3s ease; /* Dodajemy efekt powiększenia */
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+  font-size: 36px; 
+  transition: transform 0.3s ease; 
 }
 
-/* Efekt najechania na przycisk */
 .play-button:hover {
-  transform: translate(-50%, -50%) scale(1.2); /* Powiększenie przycisku po najechaniu */
-  background-color: transparent; /* Upewnienie się, że nie ma tła */
+  transform: translate(-50%, -50%) scale(1.2); 
+  background-color: transparent; 
 }
 
-/* Ikona strzałki (z Font Awesome) */
 .play-button i {
-  color: white; /* Kolor strzałki */
-  font-size: 36px; /* Rozmiar strzałki */
+  color: white;
+  font-size: 36px; 
 }
+
+.end-stream-button {
+  background-color: black;
+  color: white;
+
+}
+
+.end-stream-button:hover {
+  background-color: #e60000;
+}
+
+
 video::-webkit-media-controls-timeline {
   display: none;
 }
@@ -136,36 +139,33 @@ video::-webkit-media-controls-timeline {
 }
 
 .live-page-record-title {
-  font-size: 24px; /* Duża czcionka dla tytułu */
+  font-size: 24px; 
   font-weight: bold;
-  margin-top: 0px; /* Minimalny odstęp od wideo */
-  margin-bottom: 0px; /* Minimalny odstęp od szczegółów */
+  margin-top: 0px;
+  margin-bottom: 0px; 
   line-height: 1;
   color: #333;
   text-align: left;
 }
 
-/* Opis i data transmisji */
 .live-page-record-details p {
   font-size: 18px;
   color: #555;
   margin: 5px 0;
 }
 
-/* Kontener na autora i polubienia */
 .live-page-author-likes-container {
   display: flex;
-  justify-content: space-between;  /* Rozdziela polubienie i autora na przeciwnych końcach */
+  justify-content: space-between; 
   align-items: center;
-  margin-top: auto;  /* Przenosi na dół kontenera */
-  width: 100%;  /* Zapewnia pełną szerokość kontenera */
+  margin-top: auto; 
+  width: 100%;
 }
 
-/* Informacje o autorze */
 .live-page-author-info {
   display: flex;
   justify-content: flex-end;
-  text-decoration: none; /* Usunięcie podkreślenia domyślnie */
+  text-decoration: none;
 }
 
 .live-page-author-info img {
@@ -179,12 +179,10 @@ video::-webkit-media-controls-timeline {
   color: #333;
 }
 
-/* Stylizacja linków (autor) */
 .live-page-author-info:hover {
   text-decoration: underline;
 }
 
-/* Styl ikony polubienia */
 .live-page-likes-container {
   display: flex;
   align-items: center;
@@ -196,28 +194,24 @@ video::-webkit-media-controls-timeline {
   margin-right: 10px;
 }
 
-/* Ikona polubienia */
 .fa-thumbs-up {
   font-size: 22px;
-  color: #ccc;  /* Kolor dla niepolubionych */
+  color: #ccc;  
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
-/* Kolor ikony po polubieniu */
 .fa-thumbs-up.liked {
-  color: black; /* Kolor dla polubionych */
+  color: black; 
 }
 
-/* Kolor ikony, gdy nie jest polubione */
 .fa-thumbs-up.not-liked {
-  color: #ccc; /* Szary kolor dla niepolubionych */
+  color: #ccc; 
 }
 
-/* Responsywne dla dużych ekranów */
 @media (max-width: 1200px) {
   .live-page-video-container {
-    max-width: 90%; /* Zmniejszamy maksymalną szerokość wideo */
+    max-width: 90%;
   }
 
   .live-page-record-details p {
@@ -229,7 +223,6 @@ video::-webkit-media-controls-timeline {
   }
 }
 
-/* Dla średnich ekranów */
 @media (max-width: 1100px) {
   .live-page-record-container {
     flex-direction: column;
@@ -257,7 +250,6 @@ video::-webkit-media-controls-timeline {
   }
 }
 
-/* Dla małych urządzeń mobilnych */
 @media (max-width: 900px) {
   .live-page-record-title {
     font-size: 22px;
@@ -272,7 +264,6 @@ video::-webkit-media-controls-timeline {
   }
 }
 
-/* Dla urządzeń mobilnych */
 @media (max-width: 600px) {
   .live-page-wrapper {
     padding: 10px;

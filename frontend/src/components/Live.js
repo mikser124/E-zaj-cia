@@ -13,7 +13,8 @@ const Live = ({ userId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [participantCount, setParticipantCount] = useState(0);  // Zmienna przechowująca liczbę uczestników
+  const [participantCount, setParticipantCount] = useState(0);
+  const [endMessage, setEndMessage] = useState('');
 
   const { user } = useAuth();
 
@@ -32,7 +33,7 @@ const Live = ({ userId }) => {
           setErrorMessage('Transmisja HLS nie jest dostępna.');
         }
       } catch (error) {
-        setErrorMessage('Nie udało się pobrać transmisji.');
+        setErrorMessage('Transmisja na razie nie jest dostępna.');
         console.error('Error fetching stream data:', error);
       } finally {
         setIsLoading(false);
@@ -50,45 +51,45 @@ const Live = ({ userId }) => {
       hls.loadSource(streamData.hlsUrl);
       hls.attachMedia(video);
 
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          setEndMessage('Transmisja została zakończona przez autora.');
+        }
+      });
+
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         setIsPlaying(false);
       });
 
       video.onpause = () => setIsPlaying(false);
       video.onplay = () => setIsPlaying(true);
-
+      
       return () => {
         hls.destroy();
       };
     }
   }, [streamData]);
 
-  useEffect(() => {
-    if (isPlaying && streamData) {
-      const refreshStream = () => {
-        const video = document.getElementById('video');
-        const hls = new Hls();
+  const endStream = () => {
+    alert('Musisz skończyć transmisję w OBS.');
+  };
 
-        hls.loadSource(streamData.hlsUrl);
-        hls.attachMedia(video);
-
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
-          setIsPlaying(true);
-          video.currentTime = video.duration; // Automaticzne ustawienie na żywy punkt
-        });
-
-        return hls;
-      };
-
-      refreshStream();
+  const togglePlay = () => {
+    const video = document.getElementById('video');
+    
+    if (isPlaying) {
+      video.pause(); 
+    } else {
+      video.play(); 
     }
-  }, [isPlaying, streamData]);
+
+    setIsPlaying(!isPlaying);
+  };
 
   if (isLoading) {
     return <div>Ładowanie transmisji...</div>;
   }
-
+  
   const avatarUrl = userData?.photo ? `http://localhost:3000/${userData.photo}` : defaultAvatar;
 
   return (
@@ -102,12 +103,13 @@ const Live = ({ userId }) => {
                 <video id="video" controls />
 
                 {!isPlaying && (
-                  <button onClick={() => setIsPlaying(true)} className="play-button">
+                   <button onClick={togglePlay} className="play-button">
                     <i className="fas fa-play"></i>
                   </button>
                 )}
               </div>
               <h2 className="live-page-record-title">{streamData.tytul}</h2>
+              {endMessage && (<h2 className='live-page-record-title'> Autor skończył transmisję</h2>)}
               <div className="live-page-record-details">
                 <span><strong>Data:</strong> {new Date(streamData.data_rozpoczecia).toLocaleDateString()}</span>
                 <span><strong>Liczba uczestników:</strong> {participantCount}</span>
@@ -117,12 +119,15 @@ const Live = ({ userId }) => {
                     <span>{`${userData.imie} ${userData.nazwisko}`}</span>
                   </Link>
                 </span>
+                { user && user.id === parseInt(userId) && (
+                  <span><button className="end-stream-button" onClick={endStream}>Zakończ transmisję</button></span>
+                )}
               </div>
             </>
           )}
         </div>
         <div className="live-page-chat-column">
-          <Chat userName={user ? `${user.imie} ${user.nazwisko}` : 'Gość'} setParticipantCount={setParticipantCount} /> {/* Przekazanie funkcji do Chat */}
+          <Chat userName={user ? `${user.imie} ${user.nazwisko} ` : 'Gość'} setParticipantCount={setParticipantCount} prowadzacyId={parseInt(userId)}/>
         </div>
       </div>
     </div>
