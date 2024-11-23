@@ -11,6 +11,7 @@ import Record from './components/Record';
 import StartLive from './components/StartLive'; 
 import LivePage from './pages/LivePage';
 import AddRecordingPage from './pages/AddRecordingPage';
+import Message from './components/Message';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/start-live" element={<StartLive />} />
             <Route path="/live/:userId" element={<LivePage />} />
             <Route path="/add-recording/:userId" element={<AddRecordingPage/>} />
+            <Route path="/messages" element={<Message />} />
           </Routes>
       </Router>
     </AuthProvider>

@@ -19,7 +19,7 @@
   }
   
   .navbar-links {
-    display: flex;
+    display: flex;  
     gap: 15px;
   }
   
@@ -41,3 +41,12 @@
     border-radius: 4px;
   }
   
+  .navbar-message-icon {
+    vertical-align: middle;
+    font-size: 20px;
+    color: lightgray; 
+  }
+   
+  .navbar-message-icon:hover {
+    color: gray; 
+  }

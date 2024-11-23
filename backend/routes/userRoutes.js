@@ -4,6 +4,7 @@ const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.get('/:id', userController.getUserProfile); 
+router.get('/users', userController.getAllUsers);
 
 router.put('/:id', authMiddleware, userController.updateUserProfile);
 router.put('/:id/update-description', authMiddleware, userController.updateDescription);

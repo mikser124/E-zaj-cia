@@ -1,12 +1,10 @@
 .profile-container{
   margin-top: 100px;
-
 }
 
 
 .profile-banner {
     width: 90%; 
-  
     margin: 2% auto; 
     border: 2px solid #000000; 
     border-radius: 10px; 
@@ -76,6 +74,7 @@
 
 .user-description {
   margin: 10px;
+  cursor: pointer;
 }
 
 .small-avatar {
@@ -157,3 +156,72 @@ video {
   border-radius: 5px;
 }
 
+.profile-stats {
+  position: absolute;
+  bottom: 0px;
+  left: 20%; 
+  right: 20%; 
+  display: flex;
+  justify-content: space-around; 
+  font-size: 14px;
+  color: #fff;
+}
+
+.profile-stats p {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-align: center;
+  
+}
+
+.profile-page-user-role {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 20px;
+  text-transform: capitalize;
+  font-style: italic;
+
+}
+
+.profile-page-user-role.początkujący {
+  background-color: green;
+  color: lightgreen;
+}
+
+.profile-page-user-role.praktyk {
+  background-color: yellow;
+  color: purple; 
+}
+
+.profile-page-user-role.ekspert {
+  background-color: red;
+  color: black;
+}
+
+.profile-page-user-type {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 20px;
+  text-transform: capitalize;
+  font-style: italic;
+}
+
+.profile-page-user-type.student{
+  background-color: gray;
+  color: lightgray;
+}
+
+.profile-page-user-type.prowadzacy {
+  background-color: gray;
+  color: lightgray; 
+}
+
+.profile-page-user-type.administrator {
+  background-color: red;
+  color: orange;
+}

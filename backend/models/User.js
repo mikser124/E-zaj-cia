@@ -3,11 +3,17 @@ const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   const User = sequelize.define('User', {
+    id: { 
+      type: DataTypes.INTEGER,  
+      primaryKey: true,         
+      autoIncrement: true,      
+      allowNull: false,         
+    },
     imie: { type: DataTypes.STRING, allowNull: false },
     nazwisko: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false },
     haslo: { type: DataTypes.STRING, allowNull: false },
-    photo: { type: DataTypes.STRING },
+    photo: { type: DataTypes.STRING },  
     banner: { type: DataTypes.STRING },
     opis: { type: DataTypes.STRING },
     typ_uzytkownika: { type: DataTypes.STRING, defaultValue: 'student' },
@@ -41,6 +47,9 @@ module.exports = (sequelize) => {
 
     User.hasMany(models.Points, { as: 'receivedPoints', foreignKey: 'uzytkownik_id' });
     User.hasMany(models.Points, { as: 'givenPoints', foreignKey: 'prowadzacy_id' });
+   
+    User.hasMany(models.Message, { foreignKey: 'from_id' });
+    User.hasMany(models.Message, { foreignKey: 'to_id' });
   };
 
   return User;

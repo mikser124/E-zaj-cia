@@ -82,27 +82,34 @@ const UserProfile = () => {
     if (!token) return;
 
     try {
+      const updatedOpis = editedOpis.trim() === '' ? null : editedOpis;
+
       await axios.put(
         `http://localhost:3000/user/${id}/update-description`,
-        { opis: editedOpis },
+        { opis: updatedOpis },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setIsEditingOpis(false);
-      setUserData((prev) => ({ ...prev, opis: editedOpis }));
+      setUserData((prev) => ({ ...prev, opis: updatedOpis }));
     } catch (error) {
       console.error('Błąd podczas aktualizacji opisu:', error.response?.data?.message);
     }
   };
 
+
+  const handleOpisClear = async () => {
+    setEditedOpis('');
+  }
+
   if (!userData) return <div>Ładowanie...</div>;
 
-  const { imie, nazwisko, photo, banner, opis, nagrania, typ_uzytkownika } = userData;
+  const { imie, nazwisko, photo, banner, opis, nagrania, typ_uzytkownika, rola, liczba_polubien, liczba_punktow } = userData;
   const bannerUrl = banner ? `http://localhost:3000/${banner}` : '';
   const avatarUrl = photo ? `http://localhost:3000/${photo}` : defaultAvatar;
 
   const isOwnProfile = user && user.id === parseInt(id);
   const isStudent = typ_uzytkownika === 'student';
-
+  console.log("ROLA", rola.toLowerCase());
   return (
     <div className="profile-container">
       <div className="profile-banner" style={{ backgroundImage: `url(${bannerUrl})`, backgroundSize: 'cover' }}>
@@ -126,7 +133,16 @@ const UserProfile = () => {
               style={{ display: 'none' }}
             />
           </div>
-          <h2 className="profile-name">{`${imie} ${nazwisko}`}</h2>
+          <h2 className="profile-name">
+            {`${imie} ${nazwisko}`}
+          </h2>
+          <div className={`profile-page-user-type ${typ_uzytkownika.toLowerCase()}`}> {typ_uzytkownika.toLowerCase()} </div>
+          <div className={`profile-page-user-role ${rola.toLowerCase()}`}> {rola.toLowerCase()} </div>
+          
+          <div className="profile-stats">
+            <p><strong>Punkty:</strong> {liczba_punktow || 0}</p>
+            <p><strong>Polubienia:</strong> {liczba_polubien || 0}</p>
+          </div>
           {isOwnProfile && (
             <Button
               label="Zmień zdjęcie baneru"
@@ -136,27 +152,35 @@ const UserProfile = () => {
           )}
           <input type="file" id="banner-upload" onChange={handleBannerUpload} accept="image/*" style={{ display: 'none' }} />
         </div>
+
       </div>
 
       <div className="profile-comment">
-        <img src={avatarUrl} alt="Avatar" className="small-avatar" />
-        {isOwnProfile && isEditingOpis ? (
-          <div>
-            <textarea
-              className="comment-textarea"
-              value={editedOpis}
-              onChange={(e) => setEditedOpis(e.target.value)}
-              placeholder="Napisz coś o sobie..."
-            />
-            <div className='button-group'>
-              <Button label="Zapisz" onClick={handleOpisUpdate} variant="save" />
-              <Button label="Anuluj" onClick={() => setIsEditingOpis(false)} variant="cancel" />
-            </div>
-          </div>
-        ) : (
-          <span className='user-description' onClick={() => isOwnProfile && setIsEditingOpis(true)}>{opis || 'Kliknij, aby dodać opis...'}</span>
-        )}
+  <img src={avatarUrl} alt="Avatar" className="small-avatar" />
+  {isOwnProfile && isEditingOpis ? (
+    <div>
+      <textarea
+        className="comment-textarea"
+        value={editedOpis}
+        onChange={(e) => setEditedOpis(e.target.value)}
+        placeholder="Napisz coś o sobie..."
+      />
+      <div className='button-group'>
+        <Button label="Zapisz" onClick={handleOpisUpdate} variant="save" />
+        <Button label="Anuluj" onClick={() => setIsEditingOpis(false)} variant="cancel" />
+        <Button label="Wyczysc" onClick={handleOpisClear} variant='clear'/>
       </div>
+    </div>
+  ) : (
+    <span 
+      className='user-description' 
+      onClick={() => isOwnProfile && setIsEditingOpis(true)}
+    >
+      {opis ? opis : (isOwnProfile ? 'Kliknij, aby dodać opis...' : 'Ten użytkownik jeszcze nie napisał nic o sobie...')}
+    </span>
+  )}
+</div>
+
 
       {!isStudent && (
         <div className="record-list">

@@ -18,6 +18,9 @@ function Navbar() {
       <div className="navbar-links">
         {isAuthenticated ? (
           <>
+            <Link to="/messages">
+              <i className="navbar-message-icon fa-solid fa-message"></i>
+            </Link>
             <Link to="/" className="navbar-link">Strona główna</Link>
 
             <Link to={`/profile/${user ? user.id : ''}`} className="navbar-link">Mój profil</Link> 

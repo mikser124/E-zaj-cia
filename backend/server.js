@@ -28,6 +28,7 @@ const likeRoutes = require("./routes/likeRoutes");
 const liveRoutes = require('./routes/liveRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const pointRoutes = require('./routes/pointRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
@@ -38,6 +39,7 @@ app.use("/like", likeRoutes);
 app.use('/api/live', liveRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/points', pointRoutes);
+app.use('/messages', messageRoutes);
 
 app.get('/', (req, res) => {
   res.send('Witamy na stronie głównej serwera');

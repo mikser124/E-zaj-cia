@@ -8,22 +8,21 @@ const bucket = require('../config/firebase');
 exports.getUserProfile = async (req, res) => {
   const userId = req.user ? req.user.id : null; 
   const profileId = parseInt(req.params.id, 10);
-  
-  
+
   try {
     const user = await User.findByPk(profileId, {
-      attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika', 'klucz', 'rola'],
+      attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika', 'klucz', 'rola', 'liczba_polubien', 'liczba_punktow'],
     });
 
     if (!user) {
       return res.status(404).json({ message: 'Użytkownik nie znaleziony.' });
     }
 
-    const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, klucz, rola } = user;
+    const { id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, klucz, rola, liczba_polubien, liczba_punktow } = user;
     const nagrania = await Record.findAll({ where: { uzytkownik_id: profileId } });
 
 
-    res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania, klucz, rola});
+    res.status(200).json({ id, imie, nazwisko, email, photo, banner, opis, typ_uzytkownika, nagrania, klucz, rola, liczba_polubien, liczba_punktow});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Błąd przy pobieraniu użytkownika.' });
@@ -175,14 +174,24 @@ exports.updateDescription = async (req, res) => {
   const userId = req.user.id; 
   const { opis } = req.body;
   try {
-    if (!opis) {
-      return res.status(400).json({ message: 'Pole opis jest wymagane' });
-    }
-
     await User.update({ opis }, { where: { id: userId } });
     res.status(200).json({ message: 'Opis zaktualizowany', opis });
   } catch (error) {
     console.error('Błąd podczas aktualizacji opisu profila:', error);
     res.status(500).json({ message: 'Błąd podczas aktualizacji opisu profila' });
+  }
+};
+
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll();
+
+    const usersData = users.map(user => user.toJSON());
+
+    return res.json({ users: usersData });
+  } catch (error) {
+    console.error("Błąd podczas pobierania użytkowników:", error);
+    return res.status(500).json({ error: "Błąd podczas pobierania użytkowników" });
   }
 };
