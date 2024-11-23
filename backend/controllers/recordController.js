@@ -1,4 +1,4 @@
-const { Record, User } = require('../models/');
+const { Category, Record, User } = require('../models/');
 
 const getRecordingById = async (req, res) => {
   try {
