@@ -151,6 +151,42 @@
   font-weight: 600;
 }
 
+.category-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.category-filter label {
+  font-size: 16px;
+  color: #333;
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.category-filter select {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  max-width: 250px;
+  transition: border-color 0.3s ease;
+}
+
+.category-filter select:focus {
+  border-color: #0073e6;
+}
+
+.category-filter select option {
+  font-size: 16px;
+  padding: 10px;
+}
+
+
   @media (max-width: 768px) {
     .home-page-record-item {
       flex-direction: column;
@@ -177,6 +213,11 @@
   
     .search-input {
       width: 250px; 
+    }
+
+    .category-filter select {
+      width: 100%;
+      max-width: 200px; 
     }
   }
   

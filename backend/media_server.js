@@ -25,8 +25,6 @@ const config = {
         app: 'live',
         hls: true,
         hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
-        dash: true,
-        dashFlags: '[f=dash:window_size=3:extra_window_size=5]',
       },
     ],
   },
@@ -124,7 +122,6 @@ nms.on('postPublish', async (id, streamPath, args) => {
       tytul,
       data_rozpoczecia: new Date(),
     });
-    
 
     console.log(`[NMS] Transmisja została zarejestrowana w bazie: ID=${liveEntry.id}`);
     delete temporaryTitles[key];

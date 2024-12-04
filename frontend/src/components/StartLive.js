@@ -14,22 +14,16 @@ const StartLive = () => {
 
   const handleSetTitle = async () => {
     try {
-      console.log("Sprawdzanie aktywnej transmisji...");
-
       const checkResponse = await axios.get('http://localhost:3000/api/live/check-active', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      console.log("Odpowiedź na zapytanie o aktywność transmisji:", checkResponse.data);
-
       if (checkResponse.data.active) {
         setErrorMessage('Masz już aktywną transmisję. Proszę zakończyć poprzednią, zanim rozpoczniesz nową.');
         return;
       }
-
-      console.log("Brak aktywnej transmisji. Sprawdzanie tytułu...");
 
       if (!streamTitle.trim()) {
         setErrorMessage('Proszę wprowadzić nazwę transmisji.');

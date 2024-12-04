@@ -5,13 +5,19 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const db = require('./models');
+const User = require('./models/User');
+const http = require('http');
 
-
-const socketConfig = require('./config/socket');
+const socketLive = require('./config/socket');
+const socketPrivateMessages = require('./config/socketPrivateMessages');
 
 dotenv.config();
-    
+
 const app = express();
+const server = http.createServer(app); 
+const io = socketLive(server);
+socketPrivateMessages(io);
+
 
 app.use(cors());
 app.use(express.json());
@@ -39,22 +45,23 @@ app.use("/like", likeRoutes);
 app.use('/api/live', liveRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/points', pointRoutes);
-app.use('/messages', messageRoutes);
+app.use('/api/messages', messageRoutes);
 
 app.get('/', (req, res) => {
   res.send('Witamy na stronie głównej serwera');
 });
 
-
 db.sequelize.sync()
   .then(() => console.log("Modele zsynchronizowane z bazą danych."))
   .catch(error => console.error("Błąd synchronizacji:", error));
 
+
+
+
+
 const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Serwer działa na http://localhost:${PORT}`);
 });
-
-socketConfig(server);
 
 nms.run();

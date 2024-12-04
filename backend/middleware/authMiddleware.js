@@ -16,6 +16,7 @@ const authMiddleware = (req, res, next) => {
       return res.status(401).json({ message: 'Nieprawidłowy token.' });
     }
     req.user = decoded;
+
     next();
   });
 };

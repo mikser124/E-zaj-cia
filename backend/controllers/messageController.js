@@ -1,4 +1,6 @@
+const { Op } = require('sequelize');
 const { Message } = require('../models');
+const { User } = require('../models');
 
 const sendMessage = async (req, res) => {
   const { to_id, content } = req.body;
@@ -10,8 +12,12 @@ const sendMessage = async (req, res) => {
       to_id,
       content,
     });
+    
+    const sender = await User.findByPk( from_id, {
+      attributes: ['id', 'imie', 'nazwisko']
+    })
 
-    res.status(201).json({ message: 'Wiadomość wysłana', data: message });
+    res.status(201).json({ message: 'Wiadomość wysłana', data: {message, sender} });
   } catch (error) {
     console.error('Błąd przy wysyłaniu wiadomości:', error);
     res.status(500).json({ error: 'Nie udało się wysłać wiadomości' });
@@ -30,10 +36,10 @@ const getMessages = async (req, res) => {
         ],
       },
       include: [
-        { model: User, as: 'fromUser', attributes: ['imie', 'nazwisko', 'photo'] },
-        { model: User, as: 'toUser', attributes: ['imie', 'nazwisko', 'photo'] },
+        { model: User, as: 'sender', attributes: ['imie', 'nazwisko', 'photo'] },
+        { model: User, as: 'receiver', attributes: ['imie', 'nazwisko', 'photo'] },
       ],
-      order: [['created_at', 'ASC']],
+      order: [['createdAt', 'ASC']],
     });
 
     res.status(200).json({ messages });

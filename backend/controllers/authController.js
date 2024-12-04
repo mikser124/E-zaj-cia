@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); 
+const { v4: uuidv4 } = require('uuid');
 
 exports.register = async (req, res) => {
   const { imie, nazwisko, email, haslo, typ_uzytkownika = 'student' } = req.body;

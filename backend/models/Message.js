@@ -29,6 +29,7 @@ module.exports = (sequelize) => {
   }, {
     tableName: 'wiadomosc', 
     timestamps: true, 
+   
   });
 
   Message.associate = (models) => {

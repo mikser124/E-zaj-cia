@@ -1,15 +1,17 @@
 const { User } = require('../models');
 const { Record } = require('../models');
 const { Category } = require('../models');
+const { Op } = require('sequelize');
+
 const path = require('path');
 const fs = require('fs');
-const bucket = require('../config/firebase');
 
 exports.getUserProfile = async (req, res) => {
   const userId = req.user ? req.user.id : null; 
   const profileId = parseInt(req.params.id, 10);
 
   try {
+
     const user = await User.findByPk(profileId, {
       attributes: ['id', 'imie', 'nazwisko', 'email', 'photo', 'banner', 'opis', 'typ_uzytkownika', 'klucz', 'rola', 'liczba_polubien', 'liczba_punktow'],
     });
@@ -183,15 +185,19 @@ exports.updateDescription = async (req, res) => {
 };
 
 
-exports.getAllUsers = async (req, res) => {
+exports.getUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const currentUserId = req.user.id; 
+    const users = await User.findAll({
+      where: {
+        id: { [Op.ne]: currentUserId }, 
+      },
+      attributes: ['id', 'imie', 'nazwisko'],
+    });
 
-    const usersData = users.map(user => user.toJSON());
-
-    return res.json({ users: usersData });
+    res.status(200).json({ users });
   } catch (error) {
-    console.error("Błąd podczas pobierania użytkowników:", error);
-    return res.status(500).json({ error: "Błąd podczas pobierania użytkowników" });
+    console.error('Błąd przy pobieraniu użytkowników:', error);
+    res.status(500).json({ error: 'Nie udało się pobrać użytkowników' });
   }
 };

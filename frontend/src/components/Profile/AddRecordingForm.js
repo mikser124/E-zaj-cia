@@ -65,22 +65,22 @@ const AddRecordingForm = () => {
     console.log('Nowa kategoria:', newCategory);
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!file) {
             console.error('Brak pliku do przesyłania');
             return;
         }
-
+    
         if (!newCategory && !selectedCategory) {
             alert("Wybierz kategorię lub wpisz nową");
             return;
         }
-
+    
         const fileRef = ref(storage, `uploads/records/${user.id}/${file.name}`);
         setIsLoading(true); 
-
+    
         const uploadTask = uploadBytesResumable(fileRef, file);
-
+    
         uploadTask.on('state_changed', 
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -93,23 +93,34 @@ const AddRecordingForm = () => {
             },
             async () => {
                 const url = await getDownloadURL(uploadTask.snapshot.ref);
-
+    
                 let categoryId = selectedCategory;
+    
+                // Sprawdzenie, czy użytkownik wpisał nową kategorię
                 if (newCategory && !selectedCategory) {
-                    const createCategoryResponse = await axios.post(
-                        'http://localhost:3000/api/categories',
-                        { nazwa: newCategory },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem('token')}`,
-                            },
-                        }
-                    );
-                    categoryId = createCategoryResponse.data.id;
-                    console.log('Utworzona kategoria:', createCategoryResponse.data);
-
+                    // Najpierw sprawdź, czy kategoria już istnieje
+                    const existingCategory = categories.find(category => category.nazwa.toLowerCase() === newCategory.toLowerCase());
+    
+                    if (existingCategory) {
+                        // Jeśli kategoria istnieje, użyj jej ID
+                        categoryId = existingCategory.id;
+                    } else {
+                        // Jeśli nie ma kategorii, utwórz nową
+                        const createCategoryResponse = await axios.post(
+                            'http://localhost:3000/api/categories',
+                            { nazwa: newCategory },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                                },
+                            }
+                        );
+                        categoryId = createCategoryResponse.data.id;
+                        console.log('Utworzona kategoria:', createCategoryResponse.data);
+                    }
                 }
-
+    
+                // Dodanie nagrania do bazy danych
                 try {
                     const response = await axios.post(
                         `http://localhost:3000/user/${user.id}/records`,
@@ -125,7 +136,7 @@ const AddRecordingForm = () => {
                             },
                         }
                     );
-
+    
                     if (response.status === 200 || response.status === 201) {
                         setIsSuccess(true);
                         setTitle('');
@@ -142,7 +153,7 @@ const AddRecordingForm = () => {
                     console.error('Błąd przy komunikacji z backendem:', error);
                     setIsError(true);
                 }
-
+    
                 setIsLoading(false); 
             }
         );

@@ -120,7 +120,7 @@ const Chat = ({ userName, setParticipantCount, prowadzacyId }) => {
                 {msg.user}
               </strong> 
               <span>{msg.timestamp}</span>
-              <span className="user-role">({msg.role})</span> {/* Wyświetlamy rolę obok imienia */}
+              <span className="user-role">({msg.role})</span> 
               <p>{msg.text}</p>
             </div>
             <div className="message-options">
