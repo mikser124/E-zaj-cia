@@ -4,6 +4,9 @@
   "proxy": "http://localhost:3000",
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^2.8.1",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -13,13 +16,15 @@
     "axios": "^1.7.7",
     "firebase": "^10.14.1",
     "font-awesome": "^4.7.0",
+    "framer-motion": "^10.12.16",
     "hls.js": "^1.5.17",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.27.0",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "socket.io-client": "^4.8.1",
+    "use-debounce": "^10.0.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -45,5 +50,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-env": "^7.26.0"
   }
 }

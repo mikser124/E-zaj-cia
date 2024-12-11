@@ -7,11 +7,8 @@
       "dialect": "mysql"
     },
     "test": {
-      "username": "root",
-      "password": "",
-      "database": "projekt_db_test",
-      "host": "127.0.0.1",
-      "dialect": "mysql"
+      "dialect": "sqlite",
+      "storage": ":memory:"
     },
     "production": {
       "use_env_variable": "DATABASE_URL",

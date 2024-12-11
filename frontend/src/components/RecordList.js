@@ -61,6 +61,7 @@ const RecordList = () => {
 
     fetchCategories();
   }, []);
+  
   const filterItems = (items, query, category) => {
     console.log("Filtrujemy:", { query, category }); 
   
