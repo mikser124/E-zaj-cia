@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthContext';
 import '../styles/Auth.css';
 import { Link } from 'react-router-dom';
 
@@ -13,7 +12,6 @@ function Register() {
   });
 
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -40,10 +38,8 @@ function Register() {
     });
 
     const data = await response.json();
-    console.log('Response from server:', data);
     if (response.ok) {
       alert('Rejestracja udana!');
-      login({ id: data.id, imie: data.imie, nazwisko: data.nazwisko, typ_uzytkownika: data.typ_uzytkownika, rola: data.rola }, data.token);
       navigate('/login');
     } else {
       alert('Błąd: ' + data.message);

@@ -5,7 +5,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const db = require('./models');
-const User = require('./models/User');
 const http = require('http');
 
 const socketLive = require('./config/socket');
@@ -14,7 +13,7 @@ const socketPrivateMessages = require('./config/socketPrivateMessages');
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); 
+const server = http.createServer(app);
 const io = socketLive(server);
 socketPrivateMessages(io);
 
@@ -35,6 +34,7 @@ const liveRoutes = require('./routes/liveRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const pointRoutes = require('./routes/pointRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
@@ -46,6 +46,8 @@ app.use('/api/live', liveRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/points', pointRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('Witamy na stronie głównej serwera');
@@ -55,13 +57,14 @@ db.sequelize.sync()
   .then(() => console.log("Modele zsynchronizowane z bazą danych."))
   .catch(error => console.error("Błąd synchronizacji:", error));
 
+module.exports = app;
 
+if(process.env.NODE_ENV !== 'test'){
+  const PORT = process.env.PORT || 3000;
+  
+  server.listen(PORT, () => {
+    console.log(`Serwer działa na http://localhost:${PORT}`);
+  });
 
-
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Serwer działa na http://localhost:${PORT}`);
-});
-
-nms.run();
+  nms.run();
+}

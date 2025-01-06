@@ -101,23 +101,15 @@ const MessageChat = () => {
   useEffect(() => {
     if (socket) {
       socket.on('message_sent', (data) => {
-        console.log('Wiadomość wysłana:', data.message);
-  
         setMessages((prevMessages) => [...prevMessages, data.message]);
       });
-
       socket.on('receive_private_message', (data) => {
-        console.log('Otrzymano wiadomość:', data.message);
-        socket.emit('message_read', {
-          messageId: data.message.id,
-          readerId: user.id, 
-        });
-        setMessages((prevMessages) => [...prevMessages, data.message]);
+        if (data.message.from_id === parseInt(userId)) {
+          socket.emit('message_read', { messageId: data.message.id, readerId: user.id });
+          setMessages((prevMessages) => [...prevMessages, data.message]);
+        } 
       });
-  
       socket.on('message_read', (data) => {
-        console.log('Otrzymano message_read:', data);
-      
         setMessages((prevMessages) => {
           const updatedMessages = prevMessages.map((msg) =>
             msg.id === data.message.id ? { ...msg, read: true } : msg
@@ -125,17 +117,13 @@ const MessageChat = () => {
           return updatedMessages;
         });
       });
-      
-      socket.on('all_messages_read', ({ chatWith }) => {
-        console.log(`Wszystkie wiadomości do ${chatWith} zostały oznaczone jako przeczytane`);
-  
-        setMessages((prevMessages) => 
-          prevMessages.map((msg) => 
-            msg.from_id === user.id && msg.read === false ? { ...msg, read: true } : msg
-          )
-        );
+      socket.on('all_messages_read', () => {
+          setMessages((prevMessages) => 
+            prevMessages.map((msg) => 
+              msg.from_id === user.id && msg.read === false ? { ...msg, read: true } : msg
+            )
+          );
       });
-  
       return () => {
         socket.off('message_sent');
         socket.off('receive_private_message');
@@ -143,7 +131,7 @@ const MessageChat = () => {
         socket.off('all_messages_read');
       };
     }
-  }, [socket, user.id]);
+  }, [socket, user.id, userId]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {

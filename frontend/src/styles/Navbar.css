@@ -22,7 +22,7 @@
     display: flex;  
     gap: 15px;
   }
-  
+
   .navbar-links a, .navbar-links span, .navbar-links button {
     text-decoration: none;
     color: #333;
@@ -49,4 +49,15 @@
    
   .navbar-message-icon:hover {
     color: gray; 
+  }
+
+  .navbar-notifications-icon {
+    vertical-align: middle;
+    font-size: 23px;
+    color: lightgray;
+    cursor: pointer;
+  }
+  
+  .navbar-notifications-icon:hover {
+    color: gray;
   }

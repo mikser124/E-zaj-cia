@@ -48,7 +48,7 @@ async function loadValidKeys() {
   }
 }
 
-nms.on('preConnect', async (id, streamPath, args) => {
+nms.on('preConnect', async (id, streamPath) => {
   const session = nms.getSession(id);
   const actualUrl = streamPath.tcUrl || '';
   session.actualUrl = actualUrl;
@@ -58,7 +58,7 @@ nms.on('preConnect', async (id, streamPath, args) => {
   await loadValidKeys();
 });
 
-nms.on('prePublish', (id, streamPath, args) => {
+nms.on('prePublish', (id, streamPath) => {
   const session = nms.getSession(id);
 
   const expectedUrl = 'rtmp://localhost:1935/live';
@@ -95,7 +95,7 @@ nms.on('prePublish', (id, streamPath, args) => {
 
 
 
-nms.on('postPublish', async (id, streamPath, args) => {
+nms.on('postPublish', async (id, streamPath) => {
   const session = nms.getSession(id);
   const tytul = session.title || 'Domyślny tytuł';
   console.log(`[NMS] Transmisja rozpoczęta z tytułem: ${tytul}`);
@@ -132,7 +132,7 @@ nms.on('postPublish', async (id, streamPath, args) => {
 
 
 
-nms.on('donePublish', async (id, streamPath, args) => {
+nms.on('donePublish', async (id, streamPath) => {
   const key = streamPath.split('/').pop();
 
   try {
@@ -163,7 +163,6 @@ nms.on('donePublish', async (id, streamPath, args) => {
 
     await liveEntry.save();
 
-    
     console.log(`[NMS] Zakończono transmisję: ID=${liveEntry.id}`);
  
   } catch (error) {

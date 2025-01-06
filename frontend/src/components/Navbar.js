@@ -1,23 +1,30 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import Notification from './Notification';
 import '../styles/Navbar.css';
+
 
 function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate(); 
 
+
   const handleLogout = () => {
     logout();
     navigate('/'); 
   };
-  
+ 
+
   return (
     <nav className="navbar">
       <div className="navbar-logo">E-zajęcia</div>
       <div className="navbar-links">
         {isAuthenticated ? (
           <>
+            <Link>
+              <Notification />
+            </Link>
             <Link to="/messages">
               <i className="navbar-message-icon fa-solid fa-message"></i>
             </Link>

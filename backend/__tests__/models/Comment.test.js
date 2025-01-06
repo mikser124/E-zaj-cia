@@ -2,12 +2,10 @@ const db = require('../../models');
 
 describe('Comment Model', () => {
   beforeEach(async () => {
-    // Synchronizacja bazy danych
     await db.sequelize.sync({ force: true });
   });
 
   afterAll(async () => {
-    // Zamknięcie połączenia
     await db.sequelize.close();
   });
 
@@ -64,9 +62,7 @@ describe('Comment Model', () => {
       nagranie_id: record.id,
     });
 
-    // Pobieranie użytkownika z komentarza
     const associatedUser = await comment.getUser();
-    // Pobieranie rekordu z komentarza
     const associatedRecord = await comment.getRecord();
 
     expect(associatedUser).toBeDefined();

@@ -22,10 +22,10 @@ const givePoints = async (req, res) => {
         uzytkownik_id,
         prowadzacy_id,
         liczba_punktow,
-        data_przyznania: new Date()  
+        data_przyznania: new Date()
       });
   
-      const updatedPoints = student.liczba_punktow + liczba_punktow;
+      const updatedPoints = student.liczba_punktow + parseInt(liczba_punktow);
       let rola = 'Początkujący';
   
       if (updatedPoints <= 300) {

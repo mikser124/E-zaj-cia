@@ -47,34 +47,28 @@ describe('Like Model', () => {
         uzytkownik_id: user.id,
       });
   
-      // Dodajemy pierwsze polubienie
       await db.Like.create({
         uzytkownik_id: user.id,
         nagranie_id: record.id,
       });
   
-      // Sprawdzamy, czy polubienie istnieje
       let like = await db.Like.findOne({
         where: { uzytkownik_id: user.id, nagranie_id: record.id }
       });
       expect(like).toBeDefined();
   
-      // Usuwamy polubienie (odznaczamy)
       await like.destroy();
   
-      // Sprawdzamy, czy polubienie zostało usunięte
       like = await db.Like.findOne({
         where: { uzytkownik_id: user.id, nagranie_id: record.id }
       });
       expect(like).toBeNull();
   
-      // Dodajemy polubienie ponownie
       await db.Like.create({
         uzytkownik_id: user.id,
         nagranie_id: record.id,
       });
   
-      // Sprawdzamy, czy polubienie zostało ponownie dodane
       like = await db.Like.findOne({
         where: { uzytkownik_id: user.id, nagranie_id: record.id }
       });

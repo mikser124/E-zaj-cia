@@ -2,12 +2,10 @@ const db = require('../../models');
 
 describe('Live Model', () => {
   beforeEach(async () => {
-    // Synchronizacja bazy danych przed każdym testem
     await db.sequelize.sync({ force: true });
   });
 
   afterAll(async () => {
-    // Zamknięcie połączenia z bazą po testach
     await db.sequelize.close();
   });
 
@@ -48,7 +46,6 @@ describe('Live Model', () => {
       nazwa: 'Technologia',
     });
 
-    // Brak 'tytul' powinien spowodować błąd
     await expect(
       db.Live.create({
         data_rozpoczecia: new Date(),
@@ -57,7 +54,6 @@ describe('Live Model', () => {
       })
     ).rejects.toThrow('notNull Violation: Live.tytul cannot be null');
 
-    // Brak 'data_rozpoczecia' powinien spowodować błąd
     await expect(
       db.Live.create({
         tytul: 'Nowoczesne technologie',
@@ -95,11 +91,9 @@ describe('Live Model', () => {
       kategoria_id: category.id,
     });
 
-    // Sprawdzanie relacji 'user'
     const liveUser = await live.getUser();
     expect(liveUser.id).toBe(user.id);
 
-    // Sprawdzanie relacji 'category'
     const liveCategory = await live.getCategory();
     expect(liveCategory.id).toBe(category.id);
   });

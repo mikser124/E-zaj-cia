@@ -96,7 +96,7 @@ const CommentList = ({ nagranie_id }) => {
   const handleEditComment = (commentId, currentText) => {
     setEditCommentId(commentId);
     setEditCommentText(currentText);
-    setOriginalCommentText(currentText); // Zapisz oryginalny tekst komentarza przed edycją
+    setOriginalCommentText(currentText);
   };
 
   const handleSaveEdit = async () => {
@@ -138,9 +138,8 @@ const CommentList = ({ nagranie_id }) => {
   };
 
   const handleCancelEdit = () => {
-    // Cofnij zmiany i przywróć oryginalny tekst
     setEditCommentText(originalCommentText);
-    setEditCommentId(null); // Anulowanie edycji
+    setEditCommentId(null); 
   };
 
   const handleDeleteComment = async (commentId) => {

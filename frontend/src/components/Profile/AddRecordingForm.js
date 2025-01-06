@@ -96,16 +96,12 @@ const AddRecordingForm = () => {
     
                 let categoryId = selectedCategory;
     
-                // Sprawdzenie, czy użytkownik wpisał nową kategorię
                 if (newCategory && !selectedCategory) {
-                    // Najpierw sprawdź, czy kategoria już istnieje
                     const existingCategory = categories.find(category => category.nazwa.toLowerCase() === newCategory.toLowerCase());
     
                     if (existingCategory) {
-                        // Jeśli kategoria istnieje, użyj jej ID
                         categoryId = existingCategory.id;
                     } else {
-                        // Jeśli nie ma kategorii, utwórz nową
                         const createCategoryResponse = await axios.post(
                             'http://localhost:3000/api/categories',
                             { nazwa: newCategory },
@@ -120,7 +116,6 @@ const AddRecordingForm = () => {
                     }
                 }
     
-                // Dodanie nagrania do bazy danych
                 try {
                     const response = await axios.post(
                         `http://localhost:3000/user/${user.id}/records`,

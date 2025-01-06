@@ -2,12 +2,10 @@ const db = require('../../models');
 
 describe('Message Model', () => {
   beforeEach(async () => {
-    // Synchronizacja bazy danych przed każdym testem
     await db.sequelize.sync({ force: true });
   });
 
   afterAll(async () => {
-    // Zamknięcie połączenia z bazą po testach
     await db.sequelize.close();
   });
 
@@ -36,7 +34,7 @@ describe('Message Model', () => {
     expect(message.from_id).toBe(sender.id);
     expect(message.to_id).toBe(receiver.id);
     expect(message.content).toBe('Hello, how are you?');
-    expect(message.read).toBe(false);  // Domyślna wartość dla 'read' to false
+    expect(message.read).toBe(false);  
   });
 
   test('should enforce required fields', async () => {
@@ -60,7 +58,7 @@ describe('Message Model', () => {
         from_id: sender.id,
         to_id: receiver.id,
       })
-    ).rejects.toThrow('notNull Violation: Message.content cannot be null');  // Zmieniona nazwa modelu
+    ).rejects.toThrow('notNull Violation: Message.content cannot be null');  
 
     // Brak 'from_id' powinien spowodować błąd
     await expect(
@@ -68,7 +66,7 @@ describe('Message Model', () => {
         to_id: receiver.id,
         content: 'Test message',
       })
-    ).rejects.toThrow('notNull Violation: Message.from_id cannot be null');  // Zmieniona nazwa modelu
+    ).rejects.toThrow('notNull Violation: Message.from_id cannot be null');  
 
     // Brak 'to_id' powinien spowodować błąd
     await expect(
@@ -76,7 +74,7 @@ describe('Message Model', () => {
         from_id: sender.id,
         content: 'Test message',
       })
-    ).rejects.toThrow('notNull Violation: Message.to_id cannot be null');  // Zmieniona nazwa modelu
+    ).rejects.toThrow('notNull Violation: Message.to_id cannot be null');  
   });
 
   test('should set default value for "read" to false', async () => {
@@ -100,7 +98,7 @@ describe('Message Model', () => {
       content: 'Test message',
     });
 
-    expect(message.read).toBe(false);  // Domyślnie 'read' powinno być ustawione na false
+    expect(message.read).toBe(false); 
   });
 
   test('should establish associations with User model', async () => {
@@ -124,11 +122,9 @@ describe('Message Model', () => {
       content: 'Hello, how are you?',
     });
 
-    // Sprawdzanie relacji "sender"
     const senderMessage = await message.getSender();
     expect(senderMessage.id).toBe(sender.id);
 
-    // Sprawdzanie relacji "receiver"
     const receiverMessage = await message.getReceiver();
     expect(receiverMessage.id).toBe(receiver.id);
   });

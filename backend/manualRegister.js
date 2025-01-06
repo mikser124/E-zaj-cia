@@ -1,18 +1,24 @@
 const bcrypt = require('bcrypt');
-const User = require('./models/User'); 
+const { User } = require('./models'); 
 
 async function registerUser() {
-    const imie = 'Tomasz';           
-    const nazwisko = 'Kowalski';   
-    const email = 't.kowalski@pollub.pl'; 
+    const imie = 'Michal';           
+    const nazwisko = 'Nowak';   
+    const email = 'm.nowak@pollub.pl'; 
     const typ_uzytkownika = 'prowadzacy';      
-    const haslo = '12345';
-
- 
+    const haslo = 'mnowak';
+    const rola = 'Ekspert';
     const hashedPassword = await bcrypt.hash(haslo, 10);
 
+    await User.create({
+        imie: imie,
+        nazwisko: nazwisko,
+        email: email,
+        haslo: hashedPassword,
+        typ_uzytkownika: typ_uzytkownika,
+        rola: rola
+    });
 
-    await User.create(imie, nazwisko, email, hashedPassword, typ_uzytkownika);
     console.log('Użytkownik został dodany do bazy danych');
 }
 

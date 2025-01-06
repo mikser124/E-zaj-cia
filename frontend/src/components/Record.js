@@ -82,7 +82,7 @@ const Record = () => {
       }
 
     } catch (error) {
-      console.error('Error liking/unliking the record:', error);
+      console.error('Błąd polubienia nagrania:', error);
     }
   };
 

@@ -1,6 +1,5 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize } = require('sequelize');
 const defineUserModel = require('../../models/User');
-const { v4: uuidv4 } = require('uuid');
 
 describe('User Model', () => {
   let sequelize;
@@ -52,16 +51,16 @@ describe('User Model', () => {
       imie: 'Piotr',
       nazwisko: 'Nowy',
       email: 'piotr.nowy@example.com',
-      haslo: 'zmienione',
+      haslo: 'passw0rd',
       liczba_punktow: 200,
     });
 
-    expect(user.rola).toBe('Początkujący'); // Początkowo liczba punktów = 200
+    expect(user.rola).toBe('Początkujący');
 
-    user.liczba_punktow = 800; // Zmieniamy liczbę punktów
+    user.liczba_punktow = 800; 
     await user.save();
 
-    expect(user.rola).toBe('Ekspert'); // Rola zmieniona na Ekspert
+    expect(user.rola).toBe('Ekspert');
   });
 
   test('should handle unique constraints for email and klucz', async () => {
@@ -81,9 +80,18 @@ describe('User Model', () => {
       })
     ).rejects.toThrow(/Validation error/); 
   });
-  
 
-  test('should set default klucz if not provided', async () => {
+  test('should validate required fields', async () => {
+    await expect(
+      User.create({
+        nazwisko: 'Bez Imienia',
+        email: 'brak.imienia@example.com',
+        haslo: 'haslobrak',
+      })
+    ).rejects.toThrow(/notNull/);
+  });
+
+  test('should use default typ_uzytkownika if not provided', async () => {
     const user = await User.create({
       imie: 'Ewa',
       nazwisko: 'Zalewska',
@@ -91,40 +99,49 @@ describe('User Model', () => {
       haslo: 'hasloewa',
     });
 
-    expect(user.klucz).toBeDefined();
-    expect(user.klucz).toMatch(/^[0-9a-fA-F-]{36}$/); 
+    expect(user.typ_uzytkownika).toBe('student');
   });
 
-  test('should associate correctly with other models', async () => {
-    const Record = sequelize.define('Record', {
-      name: { type: DataTypes.STRING },
-    });
-
-    const Comment = sequelize.define('Comment', {
-      content: { type: DataTypes.STRING },
-    });
-
-    User.hasMany(Record, { foreignKey: 'uzytkownik_id' });
-    User.hasMany(Comment, { foreignKey: 'uzytkownik_id' });
-
-    await sequelize.sync({ force: true });
-
+  test('should calculate default rola for prowadzący', async () => {
     const user = await User.create({
-      imie: 'Marek',
-      nazwisko: 'Baryła',
-      email: 'marek.baryla@example.com',
-      haslo: 'haslomarek',
+      imie: 'Prowadzący',
+      nazwisko: 'Zalewski',
+      email: 'prowadzacy@example.com',
+      haslo: 'prowadzacyhaslo',
+      typ_uzytkownika: 'prowadzacy',
     });
 
-    const record = await Record.create({ name: 'Rekord 1', uzytkownik_id: user.id });
-    const comment = await Comment.create({ content: 'Komentarz 1', uzytkownik_id: user.id });
+    expect(user.rola).toBe('Ekspert');
+  });
 
-    const records = await user.getRecords();
-    const comments = await user.getComments();
+  test('should allow null for optional fields', async () => {
+    const user = await User.create({
+      imie: 'Adam',
+      nazwisko: 'Nowak',
+      email: 'adam.nowak@example.com',
+      haslo: 'hasloadam',
+    });
 
-    expect(records).toHaveLength(1);
-    expect(records[0].name).toBe('Rekord 1');
-    expect(comments).toHaveLength(1);
-    expect(comments[0].content).toBe('Komentarz 1');
+    expect(user.photo).toBeNull();
+    expect(user.banner).toBeNull();
+    expect(user.opis).toBeNull();
+  });
+
+  test('should enforce unique klucz if not provided', async () => {
+    const user1 = await User.create({
+      imie: 'User1',
+      nazwisko: 'Test',
+      email: 'user1@example.com',
+      haslo: 'haslo1',
+    });
+
+    const user2 = await User.create({
+      imie: 'User2',
+      nazwisko: 'Test',
+      email: 'user2@example.com',
+      haslo: 'haslo2',
+    });
+
+    expect(user1.klucz).not.toBe(user2.klucz);
   });
 });

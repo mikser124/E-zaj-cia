@@ -1,5 +1,6 @@
 const { Message } = require('../models');
 const { User } = require('../models');
+const { Notification } = require('../models');
 
 const socketPrivateMessages = (io) => {
   const connectedUsers = {};
@@ -7,12 +8,9 @@ const socketPrivateMessages = (io) => {
 
   io.on('connection', (socket) => {
     console.log('Socket connected:', socket.id);
-
     socket.on('register', (userId) => {
-      connectedUsers[userId] = socket.id;
-      console.log(`Użytkownik ${userId} połączony z socketem ${socket.id}`);
+        connectedUsers[userId] = socket.id;
     });
-
     socket.on('chat_opened', ({ from_id, chatWith }) => {
       if (!activeTabs[from_id]) {
         activeTabs[from_id] = [];
@@ -20,28 +18,32 @@ const socketPrivateMessages = (io) => {
       if (!activeTabs[from_id].includes(chatWith)) {
         activeTabs[from_id].push(chatWith);
       }
-
-      console.log(`Użytkownik ${from_id} otworzył kartę czatu z ${chatWith}`);
-
+      Message.findAll({
+        where: { from_id: chatWith, to_id: from_id, read: false },
+      })
+        .then(async (messages) => {
+          for (let message of messages) {
+            const notification = await Notification.findOne({
+              where: { message_id: message.id, user_id: from_id },
+            });
+            if (notification && !notification.read) {
+              notification.read = true;
+              await notification.save();
+            }
+          }
+        });
       Message.update({ read: true }, {
-        where: {
-          from_id: chatWith,
-          to_id: from_id,
-          read: false,
-        },
+        where: { from_id: chatWith, to_id: from_id, read: false },
       })
         .then(() => {
-          console.log(`Wiadomości od ${chatWith} do ${from_id} oznaczone jako przeczytane`);
           if (connectedUsers[chatWith]) {
             io.to(connectedUsers[chatWith]).emit('all_messages_read', { chatWith: from_id });
-            console.log("ZDARZENIE ALL_MESSAGES_READ EMITOWANE DO NADAWCY", chatWith);
           }
         })
         .catch((error) => {
           console.error('Błąd przy oznaczaniu wiadomości jako przeczytane:', error);
         });
     });
-
     socket.on('chat_closed', ({ from_id, chatWith }) => {
       if (activeTabs[from_id]) {
         activeTabs[from_id] = activeTabs[from_id].filter(id => id !== chatWith);
@@ -49,7 +51,6 @@ const socketPrivateMessages = (io) => {
           delete activeTabs[from_id];
         }
       }
-
       console.log(`Użytkownik ${from_id} zamknął kartę czatu z ${chatWith}`);
     });
 
@@ -57,26 +58,30 @@ const socketPrivateMessages = (io) => {
       const { from_id, to_id, content } = data;
       try {
         const message = await Message.create({ from_id, to_id, content });
-    
         const fullMessage = await Message.findByPk(message.id, {
           include: [
             { model: User, as: 'sender', attributes: ['id', 'imie'] },
             { model: User, as: 'receiver', attributes: ['id', 'imie'] },
           ],
         });
-    
+
+        if (!fullMessage.read) {
+          await Notification.create({
+            user_id: to_id,
+            message_id: message.id,
+            content: `Masz nową wiadomość od ${fullMessage.sender.imie}`,
+            read: false,
+          });
+          console.log(`Powiadomienie utworzone dla użytkownika ${to_id}`);
+        }
         const recipientSocketId = connectedUsers[to_id];
         if (recipientSocketId) {
           io.to(recipientSocketId).emit('receive_private_message', { message: fullMessage });
-          console.log("EMITOWANIE RECEIVE DO ODBIORCY");
         }
-
         const senderSocketId = connectedUsers[from_id];
         if (senderSocketId) {
           io.to(senderSocketId).emit('message_sent', { message: fullMessage });
-          console.log("EMITOWANIE MESSAGE SENT DO NADAWCY");
         }
-    
       } catch (error) {
         console.error('Błąd przy wysyłaniu wiadomości:', error);
       }
@@ -85,7 +90,6 @@ const socketPrivateMessages = (io) => {
 
     socket.on('message_read', async (data) => {
       const { messageId, readerId } = data;
-    
       try {
         const message = await Message.findByPk(messageId);
     
@@ -93,29 +97,28 @@ const socketPrivateMessages = (io) => {
           console.error(`Wiadomość o ID ${messageId} nie istnieje`);
           return;
         }
-    
         if (message.to_id !== readerId) {
           console.error(`Użytkownik ${readerId} nie jest odbiorcą wiadomości ${messageId}`);
           return;
         }
-    
         message.read = true;
         await message.save();
-    
-        console.log(`Wiadomość ${messageId} została oznaczona jako przeczytana`);
-    
+        const notification = await Notification.findOne({
+          where: { user_id: readerId, message_id: messageId }
+        });
+        if (notification) {
+          notification.read = true;
+          await notification.save();
+        }
         const senderSocketId = connectedUsers[message.from_id];
         if (senderSocketId) {
           io.to(senderSocketId).emit('message_read', { message });
-          console.log("EMITOWANIE READ DO NADAWCY");
         }
       } catch (error) {
         console.error('Błąd przy oznaczaniu wiadomości jako przeczytanej:', error);
       }
     });
     
-    
-
     socket.on('disconnect', () => {
       for (let userId in connectedUsers) {
         if (connectedUsers[userId] === socket.id) {

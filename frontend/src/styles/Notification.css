@@ -1,0 +1,55 @@
+/* Notification.css */
+.navbar-notifications {
+    position: relative;
+  }
+  
+  .notifications-dropdown {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 10;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .notifications-dropdown h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .notifications-dropdown ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .notifications-dropdown li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+  
+  .notifications-dropdown li:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .notifications-dropdown p {
+    text-align: center;
+    color: #999;
+  }
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  background-color: rgb(0, 162, 255);
+  border-radius: 50%;
+}

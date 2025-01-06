@@ -7,7 +7,6 @@ const path = require('path');
 const fs = require('fs');
 
 exports.getUserProfile = async (req, res) => {
-  const userId = req.user ? req.user.id : null; 
   const profileId = parseInt(req.params.id, 10);
 
   try {
@@ -35,7 +34,7 @@ exports.getUserProfile = async (req, res) => {
 
 exports.updateUserProfile = async (req, res) => {
   const userId = req.user.id;
-  const profileId = req.params.id;
+  const profileId = parseInt(req.params.id);
 
   if (userId !== profileId) {
     return res.status(403).json({ message: 'Nie masz uprawnień do edycji tego profilu.' });
@@ -162,7 +161,7 @@ exports.addRecord = async (req, res) => {
           liczba_polubien: 0,
           uzytkownik_id: userId,
           kategoria_id: kategoria_id,
-      });
+      }); 
 
       res.status(201).json({ message: 'Nagranie zostało dodane do profilu użytkownika.', url });
   } catch (error) {

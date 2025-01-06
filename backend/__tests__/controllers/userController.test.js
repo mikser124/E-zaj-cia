@@ -1,146 +1,182 @@
-const UserController = require('../../controllers/userController');
-const { User, Record, Category } = require('../../models');
-const fs = require('fs');
+const request = require('supertest');
+const { sequelize, Category } = require('../../models');
+const app = require('../../server');
 const path = require('path');
+const fs = require('fs');
 
-jest.mock('../../models'); 
+describe('User Controller - API Integration Tests', () => {
+  let user;
+  let token;
 
-describe('UserController', () => {
-  let userMock;
-  let userId;
-  let req;
-  let res;
+  beforeAll(async () => {
+    await sequelize.sync({ force: true });
 
-  beforeEach(() => {
-    userMock = {
-      id: 1,
-      imie: 'Jan',
-      nazwisko: 'Kowalski',
-      email: 'jan.kowalski@example.com',
-      typ_uzytkownika: 'basic',
-      rola: 'user',
-      liczba_polubien: 10,
-      liczba_punktow: 15,
-      photo: null,
-      banner: null,
-      opis: null,
-      update: jest.fn().mockResolvedValue([1]) 
-    };
-
-    userId = userMock.id;
-
-    req = {
-      user: { id: userId }, 
-      params: { id: userId },
-      body: {},
-      files: {},
-    };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
-    };
-
-    User.findByPk.mockResolvedValue(userMock);
-    Record.findAll.mockResolvedValue([]); 
-    Category.findByPk.mockResolvedValue({ id: 1, name: 'Music' });
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks(); 
-  });
-
-  describe('getUserProfile', () => {
-    it('should return user profile successfully', async () => {
-      await UserController.getUserProfile(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+    const registerResponse = await request(app)
+      .post('/auth/register')
+      .send({
         imie: 'Jan',
         nazwisko: 'Kowalski',
-        email: 'jan.kowalski@example.com',
-      }));
+        email: 'jan.kowalski@pollub.edu.pl',
+        haslo: 'tajnehaslo',
+      });
+
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({
+        email: 'jan.kowalski@pollub.edu.pl',
+        haslo: 'tajnehaslo',
+      });
+
+    user = loginResponse.body;
+    token = loginResponse.body.token;
+  });
+
+  afterAll(async () => {
+    await sequelize.close();
+  });
+
+  describe('GET /user/:id', () => {
+    it('should return user data', async () => {
+      const response = await request(app)
+        .get(`/user/${user.id}`)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('id', user.id);
+      expect(response.body).toHaveProperty('imie', 'Jan');
+      expect(response.body).toHaveProperty('nazwisko', 'Kowalski');
+      expect(response.body).toHaveProperty('email', 'jan.kowalski@pollub.edu.pl');
     });
 
-    it('should return 404 if user not found', async () => {
-      User.findByPk.mockResolvedValue(null); 
+    it('should return 404 when user does not exist', async () => {
+      const response = await request(app)
+        .get('/user/9999')
+        .set('Authorization', `Bearer ${token}`);
 
-      await UserController.getUserProfile(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Użytkownik nie znaleziony.' });
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe('Użytkownik nie znaleziony.');
     });
   });
 
-  describe('updateUserProfile', () => {
-    it('should update user profile successfully', async () => {
-      req.body.opis = 'Nowy opis użytkownika';
+  describe('GET /user', () => {
+    it('should return a list of users', async () => {
+      const response = await request(app)
+        .get('/user')
+        .set('Authorization', `Bearer ${token}`);
 
-      await UserController.updateUserProfile(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Profil użytkownika został pomyślnie zaktualizowany.' });
-    });
-
-    it('should return 403 if user tries to edit another profile', async () => {
-      req.params.id = '999'; 
-
-      await UserController.updateUserProfile(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Nie masz uprawnień do edycji tego profilu.' });
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body.users)).toBe(true);
     });
   });
 
-  describe('updatePhoto', () => {
-    it('should update user photo successfully', async () => {
-      req.files.photo = { name: 'photo.jpg', mv: jest.fn().mockImplementation(cb => cb()) };
-      
-      const photoPath = 'uploads/photos/1-123456-photo.jpg';
-      const uploadFileMock = jest.fn().mockResolvedValue(photoPath);
-      UserController.__set__('uploadFile', uploadFileMock); 
+  describe('PUT /user/:id', () => {
+    it('should update user data', async () => {
+      const response = await request(app)
+        .put(`/user/${user.id}`)
+        .send({ opis: 'Nowy opis użytkownika' })
+        .set('Authorization', `Bearer ${token}`);
 
-      await UserController.updatePhoto(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Zdjęcie profilowe użytkownika zaktualizowane.', photo: photoPath });
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Profil użytkownika został pomyślnie zaktualizowany.');
     });
 
-    it('should return 400 if no photo is provided', async () => {
-      req.files = {}; 
+    it('should return 403 when user tries to edit another user\'s profile', async () => {
+      const response = await request(app)
+        .put(`/user/2`)
+        .send({ opis: 'Zmiana opisu innego użytkownika' })
+        .set('Authorization', `Bearer ${token}`);
 
-      await UserController.updatePhoto(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Brak pliku do przesłania.' });
-    });
-
-    it('should return 404 if user not found', async () => {
-      User.findByPk.mockResolvedValue(null);
-
-      await UserController.updatePhoto(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Użytkownik nie znaleziony.' });
+      expect(response.status).toBe(403);
+      expect(response.body.message).toBe('Nie masz uprawnień do edycji tego profilu.');
     });
   });
 
-  describe('addRecord', () => {
-    it('should add a new record successfully', async () => {
-      req.body = { title: 'New Record', description: 'Some description', url: 'http://url.com', kategoria_id: 1 };
+  describe('PUT /user/:id/update-description', () => {
+    it('should update user description', async () => {
+      const response = await request(app)
+        .put(`/user/${user.id}/update-description`)
+        .send({ opis: 'Nowy opis użytkownika' })
+        .set('Authorization', `Bearer ${token}`);
 
-      await UserController.addRecord(req, res);
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Opis zaktualizowany');
+    });
+  });
 
-      expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Nagranie zostało dodane do profilu użytkownika.', url: 'http://url.com' });
+  describe('POST /user/:id/update-photo', () => {
+    it('should update profile photo', async () => {
+      const photoPath = path.join(__dirname, 'test-photo.jpg');
+
+      if (!fs.existsSync(photoPath)) {
+        fs.writeFileSync(photoPath, 'testowe dane zdjęcia');
+      }
+
+      const response = await request(app)
+        .post(`/user/${user.id}/update-photo`)
+        .attach('photo', photoPath)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Zdjęcie profilowe użytkownika zaktualizowane.');
+
+      fs.unlinkSync(photoPath);
     });
 
-    it('should return 404 if category not found', async () => {
-      Category.findByPk.mockResolvedValue(null);
+    it('should return 400 when no file is uploaded', async () => {
+      const response = await request(app)
+        .post(`/user/${user.id}/update-photo`)
+        .set('Authorization', `Bearer ${token}`);
 
-      await UserController.addRecord(req, res);
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Brak pliku do przesłania.');
+    });
+  });
 
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Kategoria o podanym ID nie istnieje.' });
+  describe('POST /user/:id/update-banner', () => {
+    it('should update user banner', async () => {
+      const bannerPath = path.join(__dirname, './test-banner.jpg');
+
+      if (!fs.existsSync(bannerPath)) {
+        fs.writeFileSync(bannerPath, 'testowe dane banera');
+      }
+
+      const response = await request(app)
+        .post(`/user/${user.id}/update-banner`)
+        .attach('banner', bannerPath)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Baner użytkownika zaktualizowany.');
+
+      fs.unlinkSync(bannerPath);
+    });
+
+    it('should return 400 when no file is uploaded', async () => {
+      const response = await request(app)
+        .post(`/user/${user.id}/update-banner`)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Brak pliku do przesłania.');
+    });
+  });
+
+  describe('POST /user/:id/records', () => {
+    it('should add a new record to the database', async () => {
+      const category = await Category.create({ nazwa: 'Muzyka' });
+
+      const response = await request(app)
+        .post(`/user/${user.id}/records`)
+        .send({
+          title: 'Nowe nagranie',
+          description: 'Opis nagrania',
+          url: 'http://example.com/nagranie',
+          kategoria_id: category.id
+        })
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(201);
+      expect(response.body.message).toBe('Nagranie zostało dodane do profilu użytkownika.');
     });
   });
 });

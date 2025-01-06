@@ -2,12 +2,10 @@ const db = require('../../models');
 
 describe('Points Model', () => {
   beforeEach(async () => {
-    // Synchronizacja bazy danych przed każdym testem
     await db.sequelize.sync({ force: true });
   });
 
   afterAll(async () => {
-    // Zamknięcie połączenia z bazą po testach
     await db.sequelize.close();
   });
 
@@ -36,7 +34,7 @@ describe('Points Model', () => {
     expect(points.uzytkownik_id).toBe(student.id);
     expect(points.prowadzacy_id).toBe(instructor.id);
     expect(points.liczba_punktow).toBe(10);
-    expect(points.data_przyznania).toBeDefined(); // data_przyznania powinna być automatycznie ustawiona
+    expect(points.data_przyznania).toBeDefined(); 
   });
 
   test('should enforce required fields', async () => {
@@ -100,11 +98,9 @@ describe('Points Model', () => {
       liczba_punktow: 10,
     });
 
-    // Sprawdzanie relacji 'student'
     const studentPoints = await points.getStudent();
     expect(studentPoints.id).toBe(student.id);
 
-    // Sprawdzanie relacji 'instructor'
     const instructorPoints = await points.getProwadzacy();
     expect(instructorPoints.id).toBe(instructor.id);
   });
@@ -131,6 +127,6 @@ describe('Points Model', () => {
     });
 
     expect(points.data_przyznania).toBeDefined();
-    expect(new Date(points.data_przyznania).toLocaleDateString()).toBe(new Date().toLocaleDateString()); // data_przyznania powinna być ustawiona na dzisiaj
+    expect(new Date(points.data_przyznania).toLocaleDateString()).toBe(new Date().toLocaleDateString()); 
   });
 });
