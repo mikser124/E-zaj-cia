@@ -14,7 +14,11 @@ module.exports = (sequelize) => {
         model: 'Kategoria', 
         key: 'id',
       },
+<<<<<<< HEAD
       allowNull: true, 
+=======
+      allowNull: true
+>>>>>>> 505a638 (Add working application)
     },
   }, {
     tableName: 'nagranie',
