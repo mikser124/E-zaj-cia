@@ -1,57 +1,50 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('powiadomienie', { 
+    await queryInterface.createTable('powiadomienie', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true,
+        allowNull: false,
       },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'uzytkownik',
-          key: 'id'
+          key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
       message_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: 'wiadomosc',
-          key: 'id'
+          key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
       },
       content: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       read: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        allowNull: true,
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        allowNull: true,
       }
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('powiadomienie'); 
+    await queryInterface.dropTable('powiadomienie');
   }
 };

@@ -1,32 +1,20 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('punkty', {
       id: {
-        type: Sequelize.UUID, 
+        type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
       uzytkownik_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'uzytkownik', 
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
       },
       prowadzacy_id: {
-        type: Sequelize.INTEGER, 
+        type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'uzytkownik',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
       },
       liczba_punktow: {
         type: Sequelize.INTEGER,
@@ -38,15 +26,13 @@ module.exports = {
         allowNull: false,
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        allowNull: true,
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-      },
+        allowNull: true,
+      }
     });
   },
 

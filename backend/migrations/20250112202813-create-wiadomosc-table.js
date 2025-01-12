@@ -1,24 +1,21 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('wiadomosc', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
       from_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'uzytkownik', 
+          model: 'uzytkownik',
           key: 'id',
         },
-        onDelete: 'CASCADE',
       },
       to_id: {
         type: Sequelize.INTEGER,
@@ -27,7 +24,6 @@ module.exports = {
           model: 'uzytkownik',
           key: 'id',
         },
-        onDelete: 'CASCADE',
       },
       content: {
         type: Sequelize.TEXT,
@@ -38,15 +34,13 @@ module.exports = {
         defaultValue: false,
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        allowNull: true,
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-      },
+        allowNull: true,
+      }
     });
   },
 

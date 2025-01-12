@@ -1,50 +1,64 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('transmisja', {
+    await queryInterface.createTable('nagranie', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
       },
       tytul: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      data_rozpoczecia: {
-        type: Sequelize.DATE,
+      opis: {
+        type: Sequelize.STRING,
+      },
+      url: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      data_zakonczenia: {
+      data_nagrania: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
         allowNull: true,
+      },
+      liczba_polubien: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       uzytkownik_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'uzytkownik', 
+          model: 'uzytkownik',
           key: 'id',
         },
-        onDelete: 'CASCADE',
       },
       kategoria_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
         references: {
-          model: 'Kategoria',
+          model: 'kategoria',
           key: 'id',
         },
+        allowNull: true,
         onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      }
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('transmisja');
+    await queryInterface.dropTable('nagranie');
   }
 };

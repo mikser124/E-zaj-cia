@@ -1,32 +1,21 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('komentarz', {
+    await queryInterface.createTable('polubienie', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-      },
-      tresc: {
-        type: Sequelize.STRING,
+        autoIncrement: true,
         allowNull: false,
-      },
-      data_komentarza: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
       },
       uzytkownik_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'uzytkownik', 
+          model: 'uzytkownik',
           key: 'id',
         },
-        onDelete: 'CASCADE',
       },
       nagranie_id: {
         type: Sequelize.INTEGER,
@@ -35,12 +24,19 @@ module.exports = {
           model: 'nagranie',
           key: 'id',
         },
-        onDelete: 'CASCADE',
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      }
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('komentarz');
+    await queryInterface.dropTable('polubienie');
   }
 };
